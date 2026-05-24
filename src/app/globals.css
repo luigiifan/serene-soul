@@ -1,0 +1,86 @@
+
+:root {
+  --primary: #ff6f91;
+  --primary-hover: #ff4d76;
+  --primary-light: #fff5f7;
+  
+  --text-main: #201719;
+  --text-muted: #706063;
+  
+  --bg-base: #ffffff;
+  --bg-surface: #ffffff;
+  --bg-surface-alt: #fffafb;
+  
+  --border-color: #f7e6e8;
+  --border-focus: #ff6f91;
+  
+  --font-main: var(--font-plus-jakarta-sans), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Subtle, modern shadows */
+  --shadow-subtle: 0 8px 30px rgba(255, 111, 145, 0.03);
+  --shadow-focus: 0 0 0 4px rgba(255, 111, 145, 0.08);
+  
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 9999px;
+  
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.25s ease;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--text-main);
+  background-color: var(--bg-base);
+  font-family: var(--font-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: var(--font-main);
+  border: none;
+  background: none;
+  cursor: pointer;
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+input, textarea, select {
+  font-family: var(--font-main);
+  outline: none;
+  transition: var(--transition-fast);
+}
+
+/* Font Awesome Icon Alignment Helper */
+svg.svg-inline--fa {
+  vertical-align: middle;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
