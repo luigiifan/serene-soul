@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLeaf, faCalendarCheck, faArrowRight, faMusic,
   faChild, faCalendarDays, faLocationDot, faXmark,
-  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock,
+  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars,
 } from "@fortawesome/free-solid-svg-icons";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./page.module.css";
@@ -374,7 +374,7 @@ export default function Home() {
             </a>
           </nav>
           <button onClick={handleOpenModal} className={styles.mobileMenuBtn}>
-            <FontAwesomeIcon icon={faCalendarCheck} />
+            <FontAwesomeIcon icon={faBars} />
           </button>
         </div>
       </header>
