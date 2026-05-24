@@ -1591,10 +1591,6 @@
     font-size: 0.7rem;
   }
 
-  /* Hero mobile background */
-  .hero {
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.72) 100%), url('/hero_yoga_bg.png');
-  }
 }
 
 /* ========== LARGE SCREENS (1400px+) ========== */
