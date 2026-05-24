@@ -255,6 +255,7 @@ export default function Home() {
 
   // Modal Registration State
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [ticketCode, setTicketCode] = useState("");
 
@@ -373,10 +374,35 @@ export default function Home() {
               {t.navBtn}
             </a>
           </nav>
-          <button onClick={handleOpenModal} className={styles.mobileMenuBtn}>
-            <FontAwesomeIcon icon={faBars} />
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={styles.mobileMenuBtn}
+          >
+            <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} />
           </button>
         </div>
+
+        {isMobileMenuOpen && (
+          <div className={styles.mobileMenuDrawer}>
+            <div className={styles.mobileMenuLangRow}>
+              <span className={styles.mobileMenuLangLabel}>Language</span>
+              <div className={styles.langContainer}>
+                <button
+                  onClick={() => setLang("id")}
+                  className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
+                >ID</button>
+                <button
+                  onClick={() => setLang("en")}
+                  className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
+                >EN</button>
+              </div>
+            </div>
+            <a href="#about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navAbout}</a>
+            <a href="#details" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navDetails}</a>
+            <a href="#faqs" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navFaq}</a>
+            <a href="#details" className={styles.mobileNavBtn} onClick={() => setIsMobileMenuOpen(false)}>{t.navBtn}</a>
+          </div>
+        )}
       </header>
 
       {/* HERO SECTION */}
