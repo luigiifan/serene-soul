@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLeaf, faCalendarCheck, faArrowRight, faMusic,
+  faLeaf, faArrowRight, faMusic,
   faChild, faCalendarDays, faLocationDot, faXmark,
   faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars,
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,59 +13,49 @@ import styles from "./page.module.css";
 
 interface YogaEvent {
   name: string;
-  category: string;
   price: string;
   instructor: string;
   date: string;
   time: string;
-  duration: string;
   level: string;
   spotsLeft: number;
   spotsMax: number;
-  tag: string;
 }
 
 const FEATURED_EVENT: YogaEvent = {
-  name: "Zen Sound Bath Healing Journey",
-  category: "Meditasi & Yoga",
-  price: "Rp 150.000",
-  instructor: "Savitri Devi",
-  date: "Minggu, 7 Juni 2026",
-  time: "16:00 - 17:30 WIB",
-  duration: "90 Menit",
-  level: "Semua Level",
+  name: "Morning Yoga Class with Coach Nita Rosalina",
+  price: "Rp 75.000",
+  instructor: "Nita Rosalina",
+  date: "22 Juni 2026",
+  time: "08:00 - 09:30 WIB",
+  level: "Pemula",
   spotsLeft: 7,
   spotsMax: 15,
-  tag: "Event Terbatas & Eksklusif",
 };
 
 // English Translations for Featured Event
 const FEATURED_EVENT_EN: YogaEvent = {
-  name: "Zen Sound Bath Healing Journey",
-  category: "Sound Meditation & Yoga",
-  price: "IDR 150.000",
-  instructor: "Savitri Devi",
-  date: "Sun, June 7, 2026",
-  time: "16:00 - 17:30 WIB",
-  duration: "90 Minutes",
-  level: "All Levels",
+  name: "Morning Yoga Class with Coach Nita Rosalina",
+  price: "IDR 75.000",
+  instructor: "Nita Rosalina",
+  date: "June 22, 2026",
+  time: "08:00 - 09:30 WIB",
+  level: "Beginner",
   spotsLeft: 7,
   spotsMax: 15,
-  tag: "Limited & Exclusive Event",
 };
 
 const TRANSLATIONS = {
   id: {
     navAbout: "Tentang",
-    navDetails: "Detail Sesi",
+    navDetails: "Jadwal",
     navFaq: "FAQ",
     navBtn: "Daftar Sesi",
-    heroTag: "Event Spesial Terbatas",
+    heroTag: "Kelas Yoga 2026",
     heroTitle: "Bergerak penuh niat, bernapas dengan damai",
     heroDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.",
     heroCtaPrimary: "Daftar Sesi Sekarang",
     heroCtaSecondary: "Detail Acara",
-    countdownSubtitle: "Waktu Tersisa Menuju Event",
     countdownDays: "Hari",
     countdownHours: "Jam",
     countdownMinutes: "Menit",
@@ -80,7 +70,6 @@ const TRANSLATIONS = {
     benefit3Title: "Keheningan Studio Zen",
     benefit3Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.",
     detailsSubtitle: "Acara Terdekat",
-    detailsTitle: "Event Terbatas yang Akan Datang",
     metaDetailLabel: "DETAIL ACARA",
     metaDate: "Hari & Tanggal",
     metaDateVal: "",
@@ -88,45 +77,45 @@ const TRANSLATIONS = {
     metaInstructor: "Guru Pengajar",
     metaLevel: "Level",
     spotsLeft: "Sisa Slot Tersedia",
-    spotsMaxLabel: "dari",
     spotsFull: "Kuota Penuh",
     btnRegister: "Daftar Sesi",
     btnViewLocation: "Lihat Lokasi",
     scheduleLabel: "Jadwal",
+    slotsLabel: "Slot Tersedia",
     faqSubtitle: "Tanya Jawab",
     faqTitle: "Pertanyaan Umum",
     faqDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris.",
     footerDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     sponsoredBy: "DIDUKUNG OLEH",
     footerNav: "Navigasi",
-    footerTheme: "Tema Sesi",
     footerContact: "Kontak Kami",
     footerCopyright: "© 2026 Serene Soul. All rights reserved.",
     footerTerms: "Syarat Ketentuan",
     footerPrivacy: "Kebijakan Privasi",
-    modalTitle: "Pesan Slot Event",
+    modalTitle: "Daftar Sesi",
     modalTitleSuccess: "Pendaftaran Berhasil!",
     modalSubtitle: "Silakan isi data lengkap Anda untuk reservasi.",
     modalSubtitleSuccess: "E-ticket Anda telah diterbitkan di bawah ini.",
-    formLabelName: "Nama Lengkap Anda *",
-    formPlaceholderName: "Masukkan nama lengkap",
+    formLabelName: "Nama Lengkap *",
+    formPlaceholderName: "",
     formLabelEmail: "Alamat Email *",
-    formLabelPhone: "Nomor WhatsApp aktif *",
+    formLabelPhone: "Nomor WhatsApp*",
     formLabelNotes: "Catatan Medis (Opsional)",
-    formPlaceholderNotes: "Contoh: cedera punggung belakang, asma, sedang hamil, dll.",
-    formTerms: "Saya menyatakan bersedia mengikuti instruksi relaksasi di Serene Studio secara kooperatif, sadar, dan aman demi kenyamanan bersama.",
+    formPlaceholderNotes: "",
+    formTerms: "Saya menyatakan bersedia mengikuti instruksi di Serene Studio secara kooperatif, sadar, dan aman demi kenyamanan bersama.",
     formSubmit: "Selesaikan Pendaftaran",
     ticketConfirm: "Pendaftaran Terkonfirmasi!",
     ticketSuccessDesc: "Selamat, pendaftaran Anda berhasil. Tiket resmi telah dikirim ke email ",
-    ticketBrand: "SERENE SOUL YOGA LIMITED EVENT",
+    ticketBrand: "SERENE SOUL LIMITED EVENT",
     ticketLabelParticipant: "Peserta",
     ticketLabelDate: "Tanggal",
     ticketLabelTime: "Waktu",
     ticketLabelInstructor: "Instruktur",
-    ticketLabelPrice: "Investasi",
+    ticketLabelPrice: "Biaya",
     ticketLabelPlace: "Tempat",
     ticketPlaceVal: "Serene Studio",
-    ticketClose: "Tutup Tiket",
+    ticketView: "Lihat Tiket",
+    ticketClose: "Selesai",
     faqData: [
       {
         q: "Bagaimana sifat acara event yoga di Serene Soul ini?",
@@ -148,15 +137,14 @@ const TRANSLATIONS = {
   },
   en: {
     navAbout: "About",
-    navDetails: "Details",
+    navDetails: "Schedule",
     navFaq: "FAQ",
     navBtn: "Book Session",
-    heroTag: "Special Limited Event",
+    heroTag: "2026 Yoga Class",
     heroTitle: "Move with intention, breathe with peace",
     heroDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.",
     heroCtaPrimary: "Book Session Now",
     heroCtaSecondary: "Event Details",
-    countdownSubtitle: "Time Remaining Until the Event",
     countdownDays: "Days",
     countdownHours: "Hours",
     countdownMinutes: "Minutes",
@@ -171,7 +159,6 @@ const TRANSLATIONS = {
     benefit3Title: "Zen Studio Serenity",
     benefit3Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.",
     detailsSubtitle: "Upcoming Event",
-    detailsTitle: "Featured Upcoming Event",
     metaDetailLabel: "EVENT DETAILS",
     metaDate: "Day & Date",
     metaDateVal: "",
@@ -179,45 +166,45 @@ const TRANSLATIONS = {
     metaInstructor: "Instructor",
     metaLevel: "Level",
     spotsLeft: "Remaining Slots Available",
-    spotsMaxLabel: "of",
     spotsFull: "Sold Out",
     btnRegister: "Book Session",
     btnViewLocation: "View Location",
     scheduleLabel: "Schedule",
+    slotsLabel: "Slots Available",
     faqSubtitle: "FAQs",
     faqTitle: "Frequently Asked Questions",
     faqDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris.",
     footerDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     sponsoredBy: "SUPPORTED BY",
     footerNav: "Navigation",
-    footerTheme: "Themes",
     footerContact: "Contact Us",
     footerCopyright: "© 2026 Serene Soul. All rights reserved.",
     footerTerms: "Terms & Conditions",
     footerPrivacy: "Privacy Policy",
-    modalTitle: "Book Event Slot",
+    modalTitle: "Book Session",
     modalTitleSuccess: "Registration Successful!",
     modalSubtitle: "Please fill in your details for reservation.",
     modalSubtitleSuccess: "Your e-ticket has been generated below.",
     formLabelName: "Your Full Name *",
-    formPlaceholderName: "Enter your full name",
+    formPlaceholderName: "",
     formLabelEmail: "Email Address *",
-    formLabelPhone: "Active WhatsApp Number *",
+    formLabelPhone: "WhatsApp Number *",
     formLabelNotes: "Medical Notes / Special Requests (Optional)",
-    formPlaceholderNotes: "Example: lower back injury, asthma, pregnant, etc.",
-    formTerms: "I agree to follow the relaxation instructions at Serene Studio cooperatively, consciously, and safely for our mutual comfort.",
+    formPlaceholderNotes: "",
+    formTerms: "I agree to follow the instructions at Serene Studio cooperatively, consciously, and safely for our mutual comfort.",
     formSubmit: "Complete Registration",
     ticketConfirm: "Registration Confirmed!",
     ticketSuccessDesc: "Congratulations, your registration is successfully confirmed. Official ticket has been sent to email ",
-    ticketBrand: "SERENE SOUL YOGA LIMITED EVENT",
+    ticketBrand: "SERENE SOUL LIMITED EVENT",
     ticketLabelParticipant: "Participant",
     ticketLabelDate: "Date",
     ticketLabelTime: "Time",
     ticketLabelInstructor: "Instructor",
-    ticketLabelPrice: "Investment",
+    ticketLabelPrice: "Price",
     ticketLabelPlace: "Venue",
     ticketPlaceVal: "Serene Studio",
-    ticketClose: "Close Ticket",
+    ticketView: "View Ticket",
+    ticketClose: "Done",
     faqData: [
       {
         q: "What is the nature of this Serene Soul yoga event?",
@@ -256,7 +243,9 @@ export default function Home() {
   // Modal Registration State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isTicketOpen, setIsTicketOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const modalBodyRef = useRef<HTMLDivElement>(null);
   const [ticketCode, setTicketCode] = useState("");
 
   // Form Fields State
@@ -310,16 +299,19 @@ export default function Home() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setBookingSuccess(false);
+    setIsTicketOpen(false);
   };
 
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !email || !phone || !agree) return;
 
-    // Simulate booking process & ticket generation
     const randomCode = `SRN-${Math.floor(1000 + Math.random() * 9000)}-SND`;
     setTicketCode(randomCode);
     setBookingSuccess(true);
+    setTimeout(() => {
+      modalBodyRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    }, 50);
   };
 
   const toggleFaq = (index: number) => {
@@ -656,7 +648,7 @@ export default function Home() {
               </div>
               <div className={styles.contactItem}>
                 <FontAwesomeIcon icon={faPhone} />
-                <span>+62 821-3456-7890 (WA Admin)</span>
+                <span>+62 821-3456-7890</span>
               </div>
               <div className={styles.contactItem}>
                 <FontAwesomeIcon icon={faEnvelope} />
@@ -705,7 +697,7 @@ export default function Home() {
               </button>
             </div>
 
-            <div className={styles.modalBody}>
+            <div className={styles.modalBody} ref={modalBodyRef}>
               {!bookingSuccess ? (
                 // Form Registration
                 <form onSubmit={handleBookingSubmit} className={styles.bookingForm}>
@@ -714,6 +706,18 @@ export default function Home() {
                       <div className={styles.summaryTitle}>{activeEvent.name}</div>
                       <div className={styles.summaryInstructor}>
                         {t.scheduleLabel}: {activeEvent.date} | {activeEvent.time}
+                      </div>
+                      <div className={styles.summarySlots}>
+                        <div className={styles.summarySlotsLabel}>
+                          <span>{t.slotsLabel}</span>
+                          <span>{activeEvent.spotsLeft} / {activeEvent.spotsMax}</span>
+                        </div>
+                        <div className={styles.summaryProgressBg}>
+                          <div
+                            className={styles.summaryProgressFill}
+                            style={{ width: `${(activeEvent.spotsLeft / activeEvent.spotsMax) * 100}%` }}
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className={styles.summaryPrice}>{activeEvent.price}</div>
@@ -742,7 +746,7 @@ export default function Home() {
                       id="emailAddress"
                       type="email"
                       required
-                      placeholder="contoh@email.com"
+                      placeholder=""
                       className={styles.formInput}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -757,7 +761,7 @@ export default function Home() {
                       id="phoneNumber"
                       type="tel"
                       required
-                      placeholder="08xxxxxxxxxx"
+                      placeholder=""
                       className={styles.formInput}
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
@@ -806,40 +810,65 @@ export default function Home() {
 
                   <div className={styles.ticket}>
                     <div className={styles.ticketTop}>
-                      <div className={styles.ticketBrand}>{t.ticketBrand}</div>
-                      <div className={styles.ticketClassName}>{activeEvent.name}</div>
+                      <div className={styles.ticketTopRow}>
+                        <div>
+                          <div className={styles.ticketBrand}>{t.ticketBrand}</div>
+                          <div className={styles.ticketClassName}>{activeEvent.name}</div>
+                        </div>
+                        <button
+                          className={styles.ticketToggleBtn}
+                          onClick={() => setIsTicketOpen(!isTicketOpen)}
+                        >
+                          <span>{t.ticketView}</span>
+                          <FontAwesomeIcon
+                            icon={faChevronDown}
+                            style={{ transition: "transform 0.2s", transform: isTicketOpen ? "rotate(180deg)" : "rotate(0deg)" }}
+                          />
+                        </button>
+                      </div>
                     </div>
-                    <div className={styles.ticketBottom}>
-                      <div className={styles.ticketInfoGroup}>
-                        <span className={styles.ticketLabel}>{t.ticketLabelParticipant}</span>
-                        <span className={styles.ticketVal}>{name}</span>
-                      </div>
-                      <div className={styles.ticketInfoGroup}>
-                        <span className={styles.ticketLabel}>{t.ticketLabelDate}</span>
-                        <span className={styles.ticketVal}>{activeEvent.date}</span>
-                      </div>
-                      <div className={styles.ticketInfoGroup}>
-                        <span className={styles.ticketLabel}>{t.ticketLabelTime}</span>
-                        <span className={styles.ticketVal}>{activeEvent.time}</span>
-                      </div>
-                      <div className={styles.ticketInfoGroup}>
-                        <span className={styles.ticketLabel}>{t.ticketLabelInstructor}</span>
-                        <span className={styles.ticketVal}>{activeEvent.instructor}</span>
-                      </div>
-                      <div className={styles.ticketInfoGroup}>
-                        <span className={styles.ticketLabel}>{t.ticketLabelPrice}</span>
-                        <span className={styles.ticketVal}>{activeEvent.price}</span>
-                      </div>
-                      <div className={styles.ticketInfoGroup}>
-                        <span className={styles.ticketLabel}>{t.ticketLabelPlace}</span>
-                        <span className={styles.ticketVal}>{t.ticketPlaceVal}</span>
-                      </div>
 
-                      <div className={styles.ticketBarcodeRow}>
-                        <div className={styles.barcode}>|||| | || ||| || ||</div>
-                        <div className={styles.ticketId}>{ticketCode}</div>
+                    {isTicketOpen && (
+                      <div className={styles.ticketBottom}>
+                        <div className={styles.ticketInfoList}>
+                          <div className={styles.ticketInfoGroup}>
+                            <span className={styles.ticketLabel}>{t.ticketLabelParticipant}</span>
+                            <span className={styles.ticketVal}>{name}</span>
+                          </div>
+                          <div className={styles.ticketInfoGroup}>
+                            <span className={styles.ticketLabel}>{t.ticketLabelDate}</span>
+                            <span className={styles.ticketVal}>{activeEvent.date}</span>
+                          </div>
+                          <div className={styles.ticketInfoGroup}>
+                            <span className={styles.ticketLabel}>{t.ticketLabelTime}</span>
+                            <span className={styles.ticketVal}>{activeEvent.time}</span>
+                          </div>
+                          <div className={styles.ticketInfoGroup}>
+                            <span className={styles.ticketLabel}>{t.ticketLabelInstructor}</span>
+                            <span className={styles.ticketVal}>{activeEvent.instructor}</span>
+                          </div>
+                          <div className={styles.ticketInfoGroup}>
+                            <span className={styles.ticketLabel}>{t.ticketLabelPrice}</span>
+                            <span className={styles.ticketVal}>{activeEvent.price}</span>
+                          </div>
+                          <div className={styles.ticketInfoGroup}>
+                            <span className={styles.ticketLabel}>{t.ticketLabelPlace}</span>
+                            <span className={styles.ticketVal}>{t.ticketPlaceVal}</span>
+                          </div>
+                        </div>
+
+                        <div className={styles.ticketQrCol}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${ticketCode}&bgcolor=ffffff`}
+                            alt="QR Code"
+                            width={90}
+                            height={90}
+                            className={styles.ticketQr}
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   <button onClick={handleCloseModal} className={styles.doneBtn}>
