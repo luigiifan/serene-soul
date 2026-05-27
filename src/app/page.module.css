@@ -408,6 +408,12 @@
   /* Enforce stable width for both EN/ID text labels */
 }
 
+.countdownNumberWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .countdownNumber {
   font-size: 2.5rem;
   font-weight: 800;
@@ -416,18 +422,17 @@
   letter-spacing: -1px;
   font-variant-numeric: tabular-nums;
   display: inline-block;
-  will-change: transform, opacity;
-  animation: tickSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  animation: countdownFlip 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-@keyframes tickSlide {
-  0% {
-    transform: translateY(-8px) scale(0.95);
-    opacity: 0.3;
+@keyframes countdownFlip {
+  from {
+    opacity: 0;
+    transform: translateY(-14px);
   }
-  100% {
-    transform: translateY(0) scale(1);
+  to {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -536,20 +541,19 @@
 }
 
 .benefitCardNumber {
-  font-size: 1.4rem;
-  font-weight: 800;
+  font-size: 1.3rem;
   color: var(--primary);
   opacity: 0.9;
   line-height: 1;
   background: var(--primary-light);
-  width: 48px;
-  height: 48px;
+  width: 52px;
+  height: 52px;
   border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 111, 145, 0.05);
+  border: 1px solid rgba(255, 111, 145, 0.12);
 }
 
 .benefitCardTitleLabel {
@@ -574,7 +578,7 @@
   .benefitCardNumber {
     width: 44px;
     height: 44px;
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
   .benefitCardTitleLabel {
     font-size: 0.95rem;
@@ -885,19 +889,6 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes scaleIn {
-  from {
-    transform: scale(0.96);
-    opacity: 0;
-  }
-
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
 }
 
 .modalHeader {
@@ -1351,45 +1342,10 @@
   color: var(--primary);
 }
 
-/* Animations Variables Helper Classes */
-.animateFadeInUp {
-  opacity: 0;
-  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animateScaleIn {
-  opacity: 0;
-  animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animateDelay1 {
-  animation-delay: 0.15s;
-}
-
-.animateDelay2 {
-  animation-delay: 0.3s;
-}
-
-.animateDelay3 {
-  animation-delay: 0.45s;
-}
-
 @keyframes taglineShine {
   0% { left: -75%; }
   60% { left: 125%; }
   100% { left: 125%; }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 /* ========== MOBILE (iPhone 11 / iPhone 12: 390–414px) ========== */

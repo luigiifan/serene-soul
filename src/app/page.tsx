@@ -6,10 +6,70 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faCalendarDays, faLocationDot, faXmark,
-  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars, faUpload, faCopy, faTicket, faCheck
+  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars, faUpload, faCopy, faTicket, faCheck,
+  faSpa, faBottleWater, faMusic, faLeaf
 } from "@fortawesome/free-solid-svg-icons";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import styles from "./page.module.css";
+
+// ─── Animation Variants ──────────────────────────────────────────────────────
+// Custom cubic-bezier easing (typed as EasingFunction via tuple cast)
+type Ease4 = [number, number, number, number];
+const easeOut: Ease4 = [0.25, 0.46, 0.45, 0.94];
+
+const fadeUp: Variants = {
+  hidden: { opacity: 0, y: 32 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: easeOut } },
+};
+
+const fadeIn: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.45, ease: "easeOut" } },
+};
+
+const scaleIn: Variants = {
+  hidden: { opacity: 0, scale: 0.92 },
+  show: { opacity: 1, scale: 1, transition: { duration: 0.5, ease: easeOut } },
+};
+
+const staggerContainer: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
+};
+
+const staggerFast: Variants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.07, delayChildren: 0.05 } },
+};
+
+const modalVariantDesktop: Variants = {
+  hidden: { opacity: 0, scale: 0.94, y: 16 },
+  show: { opacity: 1, scale: 1, y: 0, transition: { duration: 0.3, ease: easeOut } },
+  exit: { opacity: 0, scale: 0.94, y: 16, transition: { duration: 0.22, ease: "easeIn" } },
+};
+
+const modalVariantMobile: Variants = {
+  hidden: { opacity: 0, y: "100%" },
+  show: { opacity: 1, y: 0, transition: { duration: 0.38, ease: easeOut } },
+  exit: { opacity: 0, y: "100%", transition: { duration: 0.28, ease: "easeIn" } },
+};
+
+const overlayVariant: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { duration: 0.25 } },
+  exit: { opacity: 0, transition: { duration: 0.2 } },
+};
+
+const drawerVariant: Variants = {
+  hidden: { opacity: 0, y: -12, scaleY: 0.92 },
+  show: { opacity: 1, y: 0, scaleY: 1, transition: { duration: 0.28, ease: easeOut } },
+  exit: { opacity: 0, y: -8, scaleY: 0.94, transition: { duration: 0.2, ease: "easeIn" } },
+};
+
+const btnHover = { scale: 1.045, transition: { duration: 0.18, ease: "easeOut" as const } };
+const btnTap   = { scale: 0.96 };
+const linkHover = { opacity: 0.75, transition: { duration: 0.15 } };
 
 interface YogaEvent {
   name: string;
@@ -280,6 +340,7 @@ export default function Home() {
   const [lang, setLang] = useState<"id" | "en">("en");
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Live Countdown State
   const [timeLeft, setTimeLeft] = useState({
@@ -358,6 +419,12 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
 
+    // Detect mobile viewport
+    const mq = window.matchMedia("(max-width: 480px)");
+    setIsMobile(mq.matches);
+    const handleResize = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handleResize);
+
     // Live Countdown Timer logic
     const targetDate = new Date("2026-06-07T16:00:00+07:00").getTime();
 
@@ -380,7 +447,10 @@ export default function Home() {
     calculateTimeLeft();
     const timer = setInterval(calculateTimeLeft, 1000);
 
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      mq.removeEventListener("change", handleResize);
+    };
   }, []);
 
   // Automatic dummy verification delay process when viewing PENDING tickets
@@ -564,109 +634,178 @@ export default function Home() {
   return (
     <div style={{ position: "relative" }}>
       {/* HEADER NAVBAR */}
-      <header className={styles.header}>
+      <motion.header
+        className={styles.header}
+        initial={{ opacity: 0, y: -24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+      >
         <div className={styles.navContainer}>
-          <div className={styles.logo}>
+          <motion.div
+            className={styles.logo}
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
             <Image src="/logo.png" alt="Serene Soul" width={150} height={32} className={styles.logoImg} />
             <span>Serene Soul</span>
-          </div>
-          <nav className={styles.navLinks}>
+          </motion.div>
+          <motion.nav
+            className={styles.navLinks}
+            variants={staggerFast}
+            initial="hidden"
+            animate="show"
+          >
             {/* Language Switcher Text ID/EN before About */}
-            <div className={styles.langContainer}>
-              <button
+            <motion.div className={styles.langContainer} variants={fadeIn}>
+              <motion.button
                 onClick={() => setLang("en")}
                 className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
                 title="English"
+                whileHover={linkHover}
+                whileTap={btnTap}
               >
                 <span>EN</span>
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 onClick={() => setLang("id")}
                 className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
                 title="Bahasa Indonesia"
+                whileHover={linkHover}
+                whileTap={btnTap}
               >
                 <span>ID</span>
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
 
-            <a href="#about" className={styles.navLink}>
+            <motion.a href="#about" className={styles.navLink} variants={fadeIn} whileHover={linkHover}>
               {t.navAbout}
-            </a>
-            <a href="#details" className={styles.navLink}>
+            </motion.a>
+            <motion.a href="#details" className={styles.navLink} variants={fadeIn} whileHover={linkHover}>
               {t.navDetails}
-            </a>
-            <a href="#faqs" className={styles.navLink}>
+            </motion.a>
+            <motion.a href="#faqs" className={styles.navLink} variants={fadeIn} whileHover={linkHover}>
               {t.navFaq}
-            </a>
+            </motion.a>
 
-            <button onClick={handleOpenLookupModal} className={styles.navBtn}>
-              <FontAwesomeIcon icon={faTicket} />
-              {t.navBtn}
-            </button>
-          </nav>
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={styles.mobileMenuBtn}
-          >
-            <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} />
-          </button>
-        </div>
-
-        {isMobileMenuOpen && (
-          <div className={styles.mobileMenuDrawer}>
-            <div className={styles.mobileMenuLangRow}>
-              <span className={styles.mobileMenuLangLabel}>Language</span>
-              <div className={styles.langContainer}>
-                <button
-                  onClick={() => setLang("id")}
-                  className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
-                >ID</button>
-                <button
-                  onClick={() => setLang("en")}
-                  className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
-                >EN</button>
-              </div>
-            </div>
-            <a href="#about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navAbout}</a>
-            <a href="#details" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navDetails}</a>
-            <a href="#faqs" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navFaq}</a>
-            <button
-              className={styles.mobileNavBtn}
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                handleOpenLookupModal();
-              }}
+            <motion.button
+              onClick={handleOpenLookupModal}
+              className={styles.navBtn}
+              variants={fadeIn}
+              whileHover={btnHover}
+              whileTap={btnTap}
             >
               <FontAwesomeIcon icon={faTicket} />
               {t.navBtn}
-            </button>
-          </div>
-        )}
-      </header>
+            </motion.button>
+          </motion.nav>
+          <motion.button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className={styles.mobileMenuBtn}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            whileHover={btnHover}
+            whileTap={btnTap}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isMobileMenuOpen ? "close" : "open"}
+                initial={{ opacity: 0, rotate: -45, scale: 0.7 }}
+                animate={{ opacity: 1, rotate: 0, scale: 1 }}
+                exit={{ opacity: 0, rotate: 45, scale: 0.7 }}
+                transition={{ duration: 0.2 }}
+              >
+                <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} />
+              </motion.span>
+            </AnimatePresence>
+          </motion.button>
+        </div>
+
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              className={styles.mobileMenuDrawer}
+              variants={drawerVariant}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+              style={{ transformOrigin: "top center" }}
+            >
+              <motion.div className={styles.mobileMenuLangRow} variants={fadeUp}>
+                <span className={styles.mobileMenuLangLabel}>Language</span>
+                <div className={styles.langContainer}>
+                  <motion.button
+                    onClick={() => setLang("id")}
+                    className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
+                    whileHover={linkHover} whileTap={btnTap}
+                  >ID</motion.button>
+                  <motion.button
+                    onClick={() => setLang("en")}
+                    className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
+                    whileHover={linkHover} whileTap={btnTap}
+                  >EN</motion.button>
+                </div>
+              </motion.div>
+              <motion.a href="#about" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navAbout}</motion.a>
+              <motion.a href="#details" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navDetails}</motion.a>
+              <motion.a href="#faqs" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navFaq}</motion.a>
+              <motion.button
+                className={styles.mobileNavBtn}
+                variants={fadeUp}
+                whileHover={btnHover}
+                whileTap={btnTap}
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  handleOpenLookupModal();
+                }}
+              >
+                <FontAwesomeIcon icon={faTicket} />
+                {t.navBtn}
+              </motion.button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.header>
 
       {/* HERO SECTION */}
       <section className={styles.hero} id="home">
         <div className={styles.heroContainer}>
-          <div className={`${styles.heroContent} ${styles.animateFadeInUp}`}>
-            <div className={styles.tagline}>
+          <motion.div
+            className={styles.heroContent}
+            variants={staggerContainer}
+            initial="hidden"
+            animate="show"
+          >
+            <motion.div className={styles.tagline} variants={fadeUp}>
               <span>{t.heroTag}</span>
-            </div>
-            <h1 className={styles.heroTitle}>
+            </motion.div>
+            <motion.h1 className={styles.heroTitle} variants={fadeUp}>
               {t.heroTitle}
-            </h1>
-            <p className={styles.heroDesc}>
+            </motion.h1>
+            <motion.p className={styles.heroDesc} variants={fadeUp}>
               {t.heroDesc}
-            </p>
-            <div className={styles.heroBtnGroup}>
-              <button onClick={handleOpenModal} className={styles.btnPrimary}>
+            </motion.p>
+            <motion.div className={styles.heroBtnGroup} variants={fadeUp}>
+              <motion.button
+                onClick={handleOpenModal}
+                className={styles.btnPrimary}
+                whileHover={btnHover}
+                whileTap={btnTap}
+              >
                 <span>{t.heroCtaPrimary}</span>
                 <FontAwesomeIcon icon={faArrowRight} />
-              </button>
-              <a href="#details" className={styles.btnSecondary}>
+              </motion.button>
+              <motion.a
+                href="#details"
+                className={styles.btnSecondary}
+                whileHover={btnHover}
+                whileTap={btnTap}
+              >
                 <span>{t.heroCtaSecondary}</span>
-              </a>
-            </div>
-          </div>
+              </motion.a>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -674,82 +813,112 @@ export default function Home() {
 
       {/* ABOUT / BENEFITS SECTION */}
       <section className={`${styles.section} ${styles.sectionAlt}`} id="about">
-        <div className={`${styles.sectionHeader} ${styles.animateFadeInUp}`}>
-          <span className={styles.sectionSubtitle}>{t.aboutSubtitle}</span>
-          <h2 className={styles.sectionTitle}>{t.aboutTitle}</h2>
-          <p className={styles.sectionDesc}>
+        <motion.div
+          className={styles.sectionHeader}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+        >
+          <motion.span className={styles.sectionSubtitle} variants={fadeUp}>{t.aboutSubtitle}</motion.span>
+          <motion.h2 className={styles.sectionTitle} variants={fadeUp}>{t.aboutTitle}</motion.h2>
+          <motion.p className={styles.sectionDesc} variants={fadeUp}>
             {t.aboutDesc}
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className={styles.benefitsCardGrid}>
-          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
-            <span className={styles.benefitCardNumber}>{t.timeSlot1}</span>
+        <motion.div
+          className={styles.benefitsCardGrid}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+        >
+          <motion.div className={styles.benefitGridCard} variants={fadeUp} whileHover={{ y: -6, scale: 1.03, transition: { duration: 0.22 } }}>
+            <span className={styles.benefitCardNumber}><FontAwesomeIcon icon={faSpa} /></span>
             <h3 className={styles.benefitCardTitleLabel}>{t.timeline1Title}</h3>
-          </div>
-          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
-            <span className={styles.benefitCardNumber}>{t.timeSlot2}</span>
+          </motion.div>
+          <motion.div className={styles.benefitGridCard} variants={fadeUp} whileHover={{ y: -6, scale: 1.03, transition: { duration: 0.22 } }}>
+            <span className={styles.benefitCardNumber}><FontAwesomeIcon icon={faBottleWater} /></span>
             <h3 className={styles.benefitCardTitleLabel}>{t.timeline2Title}</h3>
-          </div>
-          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
-            <span className={styles.benefitCardNumber}>{t.timeSlot3}</span>
+          </motion.div>
+          <motion.div className={styles.benefitGridCard} variants={fadeUp} whileHover={{ y: -6, scale: 1.03, transition: { duration: 0.22 } }}>
+            <span className={styles.benefitCardNumber}><FontAwesomeIcon icon={faMusic} /></span>
             <h3 className={styles.benefitCardTitleLabel}>{t.timeline3Title}</h3>
-          </div>
-          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
-            <span className={styles.benefitCardNumber}>{t.timeSlot4}</span>
+          </motion.div>
+          <motion.div className={styles.benefitGridCard} variants={fadeUp} whileHover={{ y: -6, scale: 1.03, transition: { duration: 0.22 } }}>
+            <span className={styles.benefitCardNumber}><FontAwesomeIcon icon={faLeaf} /></span>
             <h3 className={styles.benefitCardTitleLabel}>{t.timeline4Title}</h3>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </section>
 
       {/* FEATURED EVENT DETAIL SECTION */}
       <section className={styles.section} id="details">
         <div className={styles.classSection}>
           {/* Header shows: Detail Acara Terdekat and directly below it the LIVE COUNTDOWN TIMER */}
-          <div className={`${styles.sectionHeader} ${styles.animateFadeInUp}`}>
-            <span className={styles.sectionSubtitle}>{t.detailsSubtitle}</span>
+          <motion.div
+            className={styles.sectionHeader}
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-80px" }}
+          >
+            <motion.span className={styles.sectionSubtitle} variants={fadeUp}>{t.detailsSubtitle}</motion.span>
 
             {mounted && !timeLeft.isExpired && (
-              <div style={{ marginTop: "1rem" }}>
+              <motion.div
+                style={{ marginTop: "1rem" }}
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.55, ease: easeOut, delay: 0.1 }}
+              >
                 <div className={styles.countdownGrid}>
-                  <div className={styles.countdownItem}>
-                    <span key={timeLeft.days} className={styles.countdownNumber}>
-                      {timeLeft.days.toString().padStart(2, "0")}
-                    </span>
-                    <span className={styles.countdownLabel}>{t.countdownDays}</span>
-                  </div>
-                  <div className={styles.countdownDivider}>:</div>
-                  <div className={styles.countdownItem}>
-                    <span key={timeLeft.hours} className={styles.countdownNumber}>
-                      {timeLeft.hours.toString().padStart(2, "0")}
-                    </span>
-                    <span className={styles.countdownLabel}>{t.countdownHours}</span>
-                  </div>
-                  <div className={styles.countdownDivider}>:</div>
-                  <div className={styles.countdownItem}>
-                    <span key={timeLeft.minutes} className={styles.countdownNumber}>
-                      {timeLeft.minutes.toString().padStart(2, "0")}
-                    </span>
-                    <span className={styles.countdownLabel}>{t.countdownMinutes}</span>
-                  </div>
-                  <div className={styles.countdownDivider}>:</div>
-                  <div className={styles.countdownItem}>
-                    <span key={timeLeft.seconds} className={styles.countdownNumber}>
-                      {timeLeft.seconds.toString().padStart(2, "0")}
-                    </span>
-                    <span className={styles.countdownLabel}>{t.countdownSeconds}</span>
-                  </div>
+                  {([
+                    { value: timeLeft.days,    label: t.countdownDays },
+                    { value: timeLeft.hours,   label: t.countdownHours },
+                    { value: timeLeft.minutes, label: t.countdownMinutes },
+                    { value: timeLeft.seconds, label: t.countdownSeconds },
+                  ] as const).map((unit, i) => (
+                    <React.Fragment key={i}>
+                      {i > 0 && <div className={styles.countdownDivider}>:</div>}
+                      <div className={styles.countdownItem}>
+                        <div className={styles.countdownNumberWrap}>
+                          <span
+                            key={unit.value}
+                            className={styles.countdownNumber}
+                          >
+                            {unit.value.toString().padStart(2, "0")}
+                          </span>
+                        </div>
+                        <span className={styles.countdownLabel}>{unit.label}</span>
+                      </div>
+                    </React.Fragment>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
             )}
-          </div>
+          </motion.div>
 
           {/* Spotlight Card with 2-Column Location Image (landscape aspect ratio) & Content */}
-          <div className={`${styles.spotlightContainer} ${styles.animateScaleIn}`}>
+          <motion.div
+            className={styles.spotlightContainer}
+            variants={scaleIn}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-60px" }}
+          >
             <div className={styles.spotlightCard}>
               <div className={styles.spotlightLayout}>
                 {/* Left Column: Landscape Studio Location Image */}
-                <div className={styles.spotlightImageCol}>
+                <motion.div
+                  className={styles.spotlightImageCol}
+                  initial={{ opacity: 0, x: -24 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.55, delay: 0.1 }}
+                >
                   <Image
                     src="/studio_venue.png"
                     alt="Serene Studio Venue"
@@ -757,112 +926,166 @@ export default function Home() {
                     className={styles.spotlightLocationImage}
                   />
                   <span className={styles.spotlightImageTag}>Serene Studio Venue</span>
-                </div>
+                </motion.div>
 
                 {/* Right Column: Event Content (Without title, start directly with details) */}
-                <div className={styles.spotlightContentCol}>
-                  <span className={styles.sectionSubtitle}>{t.metaDetailLabel}</span>
-                  <div className={styles.spotlightMetaGrid}>
-                    <div className={styles.spotlightMetaItem}>
+                <motion.div
+                  className={styles.spotlightContentCol}
+                  variants={staggerContainer}
+                  initial="hidden"
+                  whileInView="show"
+                  viewport={{ once: true }}
+                >
+                  <motion.span className={styles.sectionSubtitle} variants={fadeUp}>{t.metaDetailLabel}</motion.span>
+                  <motion.div className={styles.spotlightMetaGrid} variants={staggerFast}>
+                    <motion.div className={styles.spotlightMetaItem} variants={fadeUp}>
                       <FontAwesomeIcon icon={faCalendarDays} />
                       <div>
                         <span>{t.metaDate}</span>
                         <strong>{activeEvent.date}{t.metaDateVal}</strong>
                       </div>
-                    </div>
-                    <div className={styles.spotlightMetaItem}>
+                    </motion.div>
+                    <motion.div className={styles.spotlightMetaItem} variants={fadeUp}>
                       <FontAwesomeIcon icon={faClock} />
                       <div>
                         <span>{t.metaTime}</span>
                         <strong>{activeEvent.time}</strong>
                       </div>
-                    </div>
-                    <div className={styles.spotlightMetaItem}>
+                    </motion.div>
+                    <motion.div className={styles.spotlightMetaItem} variants={fadeUp}>
                       <FontAwesomeIcon icon={faUser} />
                       <div>
                         <span>{t.metaInstructor}</span>
                         <strong>{activeEvent.instructor}</strong>
                       </div>
-                    </div>
-                    <div className={styles.spotlightMetaItem}>
+                    </motion.div>
+                    <motion.div className={styles.spotlightMetaItem} variants={fadeUp}>
                       <FontAwesomeIcon icon={faRankingStar} />
                       <div>
                         <span>{t.metaLevel}</span>
                         <strong>{activeEvent.level}</strong>
                       </div>
-                    </div>
-                  </div>
+                    </motion.div>
+                  </motion.div>
 
-                  <div className={styles.spotlightFooter}>
-                    <a
+                  <motion.div className={styles.spotlightFooter} variants={fadeUp}>
+                    <motion.a
                       href="https://maps.google.com/?q=Jl.+Harmony+Rose+No.+18,+Kebayoran+Baru,+Jakarta+Selatan"
                       target="_blank"
                       rel="noopener noreferrer"
                       className={styles.btnLocation}
+                      whileHover={btnHover}
+                      whileTap={btnTap}
                     >
                       <FontAwesomeIcon icon={faLocationDot} />
                       <span>{t.btnViewLocation}</span>
-                    </a>
+                    </motion.a>
 
-                    <button
+                    <motion.button
                       onClick={handleOpenModal}
                       disabled={isFull}
                       className={styles.btnPrimary}
+                      whileHover={btnHover}
+                      whileTap={btnTap}
                     >
                       <span>{isFull ? t.spotsFull : t.btnRegister}</span>
                       <FontAwesomeIcon icon={faArrowRight} style={{ fontSize: "1rem" }} />
-                    </button>
-                  </div>
+                    </motion.button>
+                  </motion.div>
 
                   {/* Embedded Sponsors Block */}
-                  <div className={styles.spotlightSponsors}>
+                  <motion.div className={styles.spotlightSponsors} variants={fadeUp}>
                     <span className={styles.spotlightSponsorsTitle}>{t.sponsoredBy}</span>
                     <div className={styles.spotlightSponsorsLogos}>
                       <Image src="/rexona.png" alt="Rexona" width={110} height={36} className={styles.spotlightSponsorLogo} style={{ objectFit: "contain" }} />
                       <Image src="/closeup.png" alt="Close Up" width={72} height={24} className={styles.spotlightSponsorLogo} style={{ objectFit: "contain" }} />
                       <Image src="/dove.png" alt="Dove" width={72} height={36} className={styles.spotlightSponsorLogo} style={{ objectFit: "contain" }} />
                     </div>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* FAQ SECTION */}
       <section className={`${styles.section} ${styles.sectionAlt}`} id="faqs">
-        <div className={`${styles.sectionHeader} ${styles.animateFadeInUp}`}>
-          <span className={styles.sectionSubtitle}>{t.faqSubtitle}</span>
-          <h2 className={styles.sectionTitle}>{t.faqTitle}</h2>
-          <p className={styles.sectionDesc}>
+        <motion.div
+          className={styles.sectionHeader}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-80px" }}
+        >
+          <motion.span className={styles.sectionSubtitle} variants={fadeUp}>{t.faqSubtitle}</motion.span>
+          <motion.h2 className={styles.sectionTitle} variants={fadeUp}>{t.faqTitle}</motion.h2>
+          <motion.p className={styles.sectionDesc} variants={fadeUp}>
             {t.faqDesc}
-          </p>
-        </div>
+          </motion.p>
+        </motion.div>
 
-        <div className={`${styles.faqContainer} ${styles.animateFadeInUp}`}>
+        <motion.div
+          className={styles.faqContainer}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
           {t.faqData.map((faq, index) => (
-            <div
+            <motion.div
               key={index}
-              className={`${styles.faqItem} ${openFaq === index ? styles.faqItemActive : ""
-                }`}
+              className={`${styles.faqItem} ${openFaq === index ? styles.faqItemActive : ""}`}
+              variants={fadeUp}
             >
-              <button onClick={() => toggleFaq(index)} className={styles.faqHeader}>
+              <motion.button
+                onClick={() => toggleFaq(index)}
+                className={styles.faqHeader}
+                whileHover={{ backgroundColor: "rgba(var(--primary-rgb, 236,72,153), 0.04)" }}
+              >
                 <span className={styles.faqQuestion}>{faq.q}</span>
-                <FontAwesomeIcon icon={faChevronDown} className={styles.faqIcon} />
-              </button>
-              <div className={styles.faqBody}>
-                <div className={styles.faqContent}>{faq.a}</div>
-              </div>
-            </div>
+                <motion.span
+                  animate={{ rotate: openFaq === index ? 180 : 0 }}
+                  transition={{ duration: 0.28, ease: "easeInOut" }}
+                >
+                  <FontAwesomeIcon icon={faChevronDown} className={styles.faqIcon} />
+                </motion.span>
+              </motion.button>
+              <AnimatePresence initial={false}>
+                {openFaq === index && (
+                  <motion.div
+                    className={styles.faqBody}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.3, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    style={{ overflow: "hidden" }}
+                  >
+                    <div className={styles.faqContent}>{faq.a}</div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* FOOTER */}
-      <footer className={styles.footer}>
-        <div className={styles.footerContainer}>
-          <div className={styles.footerInfo}>
+      <motion.footer
+        className={styles.footer}
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div
+          className={styles.footerContainer}
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-40px" }}
+        >
+          <motion.div className={styles.footerInfo} variants={fadeUp}>
             <div className={styles.footerLogo}>
               <Image src="/logo.png" alt="Serene Soul" width={150} height={28} className={styles.footerLogoImg} />
               <span>Serene Soul</span>
@@ -870,24 +1093,24 @@ export default function Home() {
             <p className={styles.footerDesc}>
               {t.footerDesc}
             </p>
-          </div>
+          </motion.div>
 
-          <div className={styles.footerCol}>
+          <motion.div className={styles.footerCol} variants={fadeUp}>
             <h4>{t.footerNav}</h4>
             <div className={styles.footerLinks}>
-              <a href="#about" className={styles.footerLink}>
+              <motion.a href="#about" className={styles.footerLink} whileHover={linkHover}>
                 {t.navAbout}
-              </a>
-              <a href="#details" className={styles.footerLink}>
+              </motion.a>
+              <motion.a href="#details" className={styles.footerLink} whileHover={linkHover}>
                 {t.navDetails}
-              </a>
-              <a href="#faqs" className={styles.footerLink}>
+              </motion.a>
+              <motion.a href="#faqs" className={styles.footerLink} whileHover={linkHover}>
                 {t.navFaq}
-              </a>
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
 
-          <div className={styles.footerCol}>
+          <motion.div className={styles.footerCol} variants={fadeUp}>
             <h4>{t.footerContact}</h4>
             <div className={styles.footerContact}>
               <div className={styles.contactItem}>
@@ -904,489 +1127,745 @@ export default function Home() {
               </div>
               <div className={styles.contactItem}>
                 <FontAwesomeIcon icon={faInstagram} />
-                <a href="https://instagram.com/byserenesoul_" target="_blank" rel="noopener noreferrer" className={styles.contactLink}>
+                <motion.a href="https://instagram.com/byserenesoul_" target="_blank" rel="noopener noreferrer" className={styles.contactLink} whileHover={linkHover}>
                   @byserenesoul
-                </a>
+                </motion.a>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className={styles.footerBottom}>
+        <motion.div
+          className={styles.footerBottom}
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+        >
           <p className={styles.copyright}>
             {t.footerCopyright}
           </p>
           <div className={styles.footerSubLinks}>
-            <a href="#" className={styles.footerSubLink}>
+            <motion.a href="#" className={styles.footerSubLink} whileHover={linkHover}>
               {t.footerPrivacy}
-            </a>
-            <a href="#" className={styles.footerSubLink}>
+            </motion.a>
+            <motion.a href="#" className={styles.footerSubLink} whileHover={linkHover}>
               {t.footerTerms}
-            </a>
+            </motion.a>
           </div>
-        </div>
-      </footer>
+        </motion.div>
+      </motion.footer>
 
       {/* POPUP REGISTRATION MODAL WINDOW */}
-      {isModalOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>
-                {t.modalTitle}
-              </h3>
-              <p className={styles.modalSubtitle}>
-                {bookingSuccess
-                  ? t.modalSubtitleSuccess
-                  : t.modalSubtitle}
-              </p>
-              <button onClick={handleCloseModal} className={styles.modalClose}>
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </div>
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div
+            className={styles.modalOverlay}
+            variants={overlayVariant}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+          >
+            <motion.div
+              className={styles.modalContent}
+              variants={isMobile ? modalVariantMobile : modalVariantDesktop}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+            >
+              <div className={styles.modalHeader}>
+                <h3 className={styles.modalTitle}>
+                  {t.modalTitle}
+                </h3>
+                <p className={styles.modalSubtitle}>
+                  {bookingSuccess
+                    ? t.modalSubtitleSuccess
+                    : t.modalSubtitle}
+                </p>
+                <motion.button onClick={handleCloseModal} className={styles.modalClose} whileHover={btnHover} whileTap={btnTap}>
+                  <FontAwesomeIcon icon={faXmark} />
+                </motion.button>
+              </div>
 
-            <div className={styles.modalBody} ref={modalBodyRef}>
-              {!bookingSuccess ? (
-                // Form Registration
-                <form onSubmit={handleBookingSubmit} className={styles.bookingForm}>
-                  <div className={styles.classSummary}>
-                    <div>
-                      <div className={styles.summaryTitle}>{activeEvent.name}</div>
-                      <div className={styles.summarySlots}>
-                        <div className={styles.summarySlotsLabel}>
-                          <span>{t.slotsLabel}</span>
-                          <span>{activeEvent.spotsLeft} / {activeEvent.spotsMax}</span>
+              <div className={styles.modalBody} ref={modalBodyRef}>
+                <AnimatePresence mode="wait">
+                  {!bookingSuccess ? (
+                    // Form Registration
+                    <motion.form
+                      key="form"
+                      onSubmit={handleBookingSubmit}
+                      className={styles.bookingForm}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <div className={styles.classSummary}>
+                        <div>
+                          <div className={styles.summaryTitle}>{activeEvent.name}</div>
+                          <div className={styles.summarySlots}>
+                            <div className={styles.summarySlotsLabel}>
+                              <span>{t.slotsLabel}</span>
+                              <span>{activeEvent.spotsLeft} / {activeEvent.spotsMax}</span>
+                            </div>
+                            <div className={styles.summaryProgressBg}>
+                              <div
+                                className={styles.summaryProgressFill}
+                                style={{ width: `${(activeEvent.spotsLeft / activeEvent.spotsMax) * 100}%` }}
+                              />
+                            </div>
+                          </div>
                         </div>
-                        <div className={styles.summaryProgressBg}>
-                          <div
-                            className={styles.summaryProgressFill}
-                            style={{ width: `${(activeEvent.spotsLeft / activeEvent.spotsMax) * 100}%` }}
-                          />
-                        </div>
+                        <div className={styles.summaryPrice}>{activeEvent.price}</div>
                       </div>
-                    </div>
-                    <div className={styles.summaryPrice}>{activeEvent.price}</div>
-                  </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="fullName" className={styles.formLabel}>
-                      {t.formLabelName}
-                    </label>
-                    <input
-                      id="fullName"
-                      type="text"
-                      required
-                      placeholder=""
-                      className={styles.formInput}
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                  </div>
-
-                  {/* Email field removed */}
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="phoneNumber" className={styles.formLabel}>
-                      {t.formLabelPhone}
-                    </label>
-                    <input
-                      id="phoneNumber"
-                      type="tel"
-                      required
-                      placeholder=""
-                      className={styles.formInput}
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                    />
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label htmlFor="specialNotes" className={styles.formLabel}>
-                      {t.formLabelNotes}
-                    </label>
-                    <textarea
-                      id="specialNotes"
-                      placeholder={t.formPlaceholderNotes}
-                      className={`${styles.formInput} ${styles.formTextarea}`}
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                    />
-                  </div>
-
-                  <div className={styles.transferInfoBox}>
-                    <div className={styles.transferInfoTitle}>{t.transferInfoTitle}</div>
-                    <div className={styles.transferInfoRow}>
-                      <span>{t.transferBank}:</span>
-                      <strong>BCA</strong>
-                    </div>
-                    <div className={styles.transferInfoRow}>
-                      <span>{t.transferAccount}:</span>
-                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                        <button
-                          type="button"
-                          onClick={handleCopyAccount}
-                          className={`${styles.copyBtn} ${copied ? styles.copyBtnCopied : ""}`}
-                          title={lang === "id" ? "Salin Nomor Rekening" : "Copy Account Number"}
-                        >
-                          <FontAwesomeIcon icon={copied ? faCircleCheck : faCopy} />
-                        </button>
-                        <strong>869-041-3829</strong>
-                      </div>
-                    </div>
-                    <div className={styles.transferInfoRow}>
-                      <span>{t.transferRecipient}:</span>
-                      <strong>Serene Soul Studio</strong>
-                    </div>
-                    <div className={styles.transferInfoRow}>
-                      <span>{t.transferAmount}:</span>
-                      <strong>{activeEvent.price}</strong>
-                    </div>
-                  </div>
-
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>
-                      {t.formLabelTransfer}
-                    </label>
-                    <input
-                      type="file"
-                      id="screenshotUpload"
-                      accept="image/png, image/jpeg, image/jpg"
-                      required={!screenshot}
-                      className={styles.hiddenFileInput}
-                      onChange={(e) => {
-                        const file = e.target.files?.[0] || null;
-                        setScreenshot(file);
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => {
-                            setScreenshotUrl(reader.result as string);
-                          };
-                          reader.readAsDataURL(file);
-                        } else {
-                          setScreenshotUrl(null);
-                        }
-                      }}
-                    />
-                    {screenshotUrl ? (
-                      <div className={styles.uploadPreviewWrapper}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={screenshotUrl} alt="Preview" className={styles.screenshotPreviewImg} />
-                        <label htmlFor="screenshotUpload" className={styles.uploadChangeBtn}>
-                          <FontAwesomeIcon icon={faUpload} />
-                          {lang === "id" ? "Ganti Foto" : "Change Photo"}
+                      <div className={styles.formGroup}>
+                        <label htmlFor="fullName" className={styles.formLabel}>
+                          {t.formLabelName}
                         </label>
+                        <input
+                          id="fullName"
+                          type="text"
+                          required
+                          placeholder=""
+                          className={styles.formInput}
+                          value={name}
+                          onChange={(e) => setName(e.target.value)}
+                        />
                       </div>
-                    ) : (
-                      <label htmlFor="screenshotUpload" className={styles.uploadLabel}>
-                        <FontAwesomeIcon icon={faUpload} className={styles.uploadIcon} />
-                        <span className={styles.uploadPlaceholder}>
-                          {t.transferPlaceholder}
-                          <span className={styles.uploadFormat}>
-                            {t.transferFormat}
-                          </span>
+
+                      {/* Email field removed */}
+
+                      <div className={styles.formGroup}>
+                        <label htmlFor="phoneNumber" className={styles.formLabel}>
+                          {t.formLabelPhone}
+                        </label>
+                        <input
+                          id="phoneNumber"
+                          type="tel"
+                          required
+                          placeholder=""
+                          className={styles.formInput}
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                        />
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label htmlFor="specialNotes" className={styles.formLabel}>
+                          {t.formLabelNotes}
+                        </label>
+                        <textarea
+                          id="specialNotes"
+                          placeholder={t.formPlaceholderNotes}
+                          className={`${styles.formInput} ${styles.formTextarea}`}
+                          value={notes}
+                          onChange={(e) => setNotes(e.target.value)}
+                        />
+                      </div>
+
+                      <div className={styles.transferInfoBox}>
+                        <div className={styles.transferInfoTitle}>{t.transferInfoTitle}</div>
+                        <div className={styles.transferInfoRow}>
+                          <span>{t.transferBank}:</span>
+                          <strong>BCA</strong>
+                        </div>
+                        <div className={styles.transferInfoRow}>
+                          <span>{t.transferAccount}:</span>
+                          <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                            <motion.button
+                              type="button"
+                              onClick={handleCopyAccount}
+                              className={`${styles.copyBtn} ${copied ? styles.copyBtnCopied : ""}`}
+                              title={lang === "id" ? "Salin Nomor Rekening" : "Copy Account Number"}
+                              whileHover={btnHover}
+                              whileTap={btnTap}
+                            >
+                              <AnimatePresence mode="wait" initial={false}>
+                                <motion.span
+                                  key={copied ? "check" : "copy"}
+                                  initial={{ opacity: 0, scale: 0.6 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  exit={{ opacity: 0, scale: 0.6 }}
+                                  transition={{ duration: 0.18 }}
+                                >
+                                  <FontAwesomeIcon icon={copied ? faCircleCheck : faCopy} />
+                                </motion.span>
+                              </AnimatePresence>
+                            </motion.button>
+                            <strong>869-041-3829</strong>
+                          </div>
+                        </div>
+                        <div className={styles.transferInfoRow}>
+                          <span>{t.transferRecipient}:</span>
+                          <strong>Serene Soul Studio</strong>
+                        </div>
+                        <div className={styles.transferInfoRow}>
+                          <span>{t.transferAmount}:</span>
+                          <strong>{activeEvent.price}</strong>
+                        </div>
+                      </div>
+
+                      <div className={styles.formGroup}>
+                        <label className={styles.formLabel}>
+                          {t.formLabelTransfer}
+                        </label>
+                        <input
+                          type="file"
+                          id="screenshotUpload"
+                          accept="image/png, image/jpeg, image/jpg"
+                          required={!screenshot}
+                          className={styles.hiddenFileInput}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0] || null;
+                            setScreenshot(file);
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setScreenshotUrl(reader.result as string);
+                              };
+                              reader.readAsDataURL(file);
+                            } else {
+                              setScreenshotUrl(null);
+                            }
+                          }}
+                        />
+                        <AnimatePresence mode="wait">
+                          {screenshotUrl ? (
+                            <motion.div
+                              key="preview"
+                              className={styles.uploadPreviewWrapper}
+                              initial={{ opacity: 0, scale: 0.94 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.94 }}
+                              transition={{ duration: 0.25 }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={screenshotUrl} alt="Preview" className={styles.screenshotPreviewImg} />
+                              <motion.label htmlFor="screenshotUpload" className={styles.uploadChangeBtn} whileHover={btnHover} whileTap={btnTap} style={{ cursor: "pointer" }}>
+                                <FontAwesomeIcon icon={faUpload} />
+                                {lang === "id" ? "Ganti Foto" : "Change Photo"}
+                              </motion.label>
+                            </motion.div>
+                          ) : (
+                            <motion.label
+                              key="upload"
+                              htmlFor="screenshotUpload"
+                              className={styles.uploadLabel}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              exit={{ opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              whileHover={{ borderColor: "var(--primary)", transition: { duration: 0.2 } }}
+                            >
+                              <FontAwesomeIcon icon={faUpload} className={styles.uploadIcon} />
+                              <span className={styles.uploadPlaceholder}>
+                                {t.transferPlaceholder}
+                                <span className={styles.uploadFormat}>
+                                  {t.transferFormat}
+                                </span>
+                              </span>
+                            </motion.label>
+                          )}
+                        </AnimatePresence>
+                      </div>
+
+                      <label className={styles.formTerms}>
+                        <input
+                          type="checkbox"
+                          required
+                          checked={agree}
+                          onChange={(e) => setAgree(e.target.checked)}
+                        />
+                        <span>
+                          {t.formTerms}
                         </span>
                       </label>
-                    )}
-                  </div>
 
-                  <label className={styles.formTerms}>
-                    <input
-                      type="checkbox"
-                      required
-                      checked={agree}
-                      onChange={(e) => setAgree(e.target.checked)}
-                    />
-                    <span>
-                      {t.formTerms}
-                    </span>
-                  </label>
+                      <motion.button type="submit" disabled={isFull} className={styles.formSubmitBtn} whileHover={btnHover} whileTap={btnTap}>
+                        <span>{isFull ? t.spotsFull : t.formSubmit}</span>
+                      </motion.button>
+                    </motion.form>
+                  ) : (
+                    // Successful Registration - Pending Admin Confirmation Screen
+                    <motion.div
+                      key="success"
+                      className={styles.ticketWrapper}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -16 }}
+                      transition={{ duration: 0.35 }}
+                    >
+                      <motion.div
+                        className={styles.successIcon}
+                        initial={{ scale: 0, rotate: -30 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ type: "spring", stiffness: 260, damping: 18, delay: 0.1 }}
+                      >
+                        <FontAwesomeIcon icon={faCircleCheck} />
+                      </motion.div>
+                      <motion.h4
+                        className={styles.successTitle}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.22 }}
+                      >
+                        {t.pendingInfoTitle}
+                      </motion.h4>
+                      <motion.p
+                        className={styles.successDesc}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        {t.pendingInfoDesc}
+                      </motion.p>
 
-                  <button type="submit" disabled={isFull} className={styles.formSubmitBtn}>
-                    <span>{isFull ? t.spotsFull : t.formSubmit}</span>
-                  </button>
-                </form>
-              ) : (
-                // Successful Registration - Pending Admin Confirmation Screen
-                <div className={styles.ticketWrapper}>
-                  <div className={styles.successIcon}>
-                    <FontAwesomeIcon icon={faCircleCheck} />
-                  </div>
-                  <h4 className={styles.successTitle}>{t.pendingInfoTitle}</h4>
-                  <p className={styles.successDesc}>
-                    {t.pendingInfoDesc}
-                  </p>
+                      <motion.div
+                        className={styles.pendingBookingCard}
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ delay: 0.38, duration: 0.3 }}
+                      >
+                        <div className={styles.pendingCardHeader}>
+                          <span className={styles.pendingCardLabel}>{t.bookingCodeLabel}</span>
+                          <strong className={styles.pendingCardCode}>{ticketCode}</strong>
+                        </div>
 
-                  <div className={styles.pendingBookingCard}>
-                    <div className={styles.pendingCardHeader}>
-                      <span className={styles.pendingCardLabel}>{t.bookingCodeLabel}</span>
-                      <strong className={styles.pendingCardCode}>{ticketCode}</strong>
-                    </div>
-                    
-                    <div className={styles.pendingCardBody}>
-                      <div className={styles.pendingCardRow}>
-                        <span>{t.ticketLabelParticipant}:</span>
-                        <strong>{name}</strong>
-                      </div>
-                      <div className={styles.pendingCardRow}>
-                        <span>{t.ticketLabelDate}:</span>
-                        <strong>{activeEvent.date}</strong>
-                      </div>
-                      <div className={styles.pendingCardRow}>
-                        <span>{t.ticketLabelTime}:</span>
-                        <strong>{activeEvent.time}</strong>
-                      </div>
-                      <div className={styles.pendingCardRow}>
-                        <span>{t.ticketLabelPrice}:</span>
-                        <strong>{activeEvent.price}</strong>
-                      </div>
-                    </div>
-                  </div>
+                        <div className={styles.pendingCardBody}>
+                          <div className={styles.pendingCardRow}>
+                            <span>{t.ticketLabelParticipant}:</span>
+                            <strong>{name}</strong>
+                          </div>
+                          <div className={styles.pendingCardRow}>
+                            <span>{t.ticketLabelDate}:</span>
+                            <strong>{activeEvent.date}</strong>
+                          </div>
+                          <div className={styles.pendingCardRow}>
+                            <span>{t.ticketLabelTime}:</span>
+                            <strong>{activeEvent.time}</strong>
+                          </div>
+                          <div className={styles.pendingCardRow}>
+                            <span>{t.ticketLabelPrice}:</span>
+                            <strong>{activeEvent.price}</strong>
+                          </div>
+                        </div>
+                      </motion.div>
 
-                  <button onClick={handleCloseModal} className={styles.doneBtn}>
-                    {t.ticketClose}
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+                      <motion.button
+                        onClick={handleCloseModal}
+                        className={styles.doneBtn}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.48 }}
+                        whileHover={btnHover}
+                        whileTap={btnTap}
+                      >
+                        {t.ticketClose}
+                      </motion.button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* POPUP TICKET LOOKUP MODAL WINDOW */}
-      {isLookupOpen && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <div className={styles.modalHeader}>
-              <h3 className={styles.modalTitle}>{t.lookupTitle}</h3>
-              <p className={styles.modalSubtitle}>{t.lookupSubtitle}</p>
-              <button onClick={handleCloseLookupModal} className={styles.modalClose}>
-                <FontAwesomeIcon icon={faXmark} />
-              </button>
-            </div>
+      <AnimatePresence>
+        {isLookupOpen && (
+          <motion.div
+            className={styles.modalOverlay}
+            variants={overlayVariant}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+          >
+            <motion.div
+              className={styles.modalContent}
+              variants={isMobile ? modalVariantMobile : modalVariantDesktop}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+            >
+              <div className={styles.modalHeader}>
+                <h3 className={styles.modalTitle}>{t.lookupTitle}</h3>
+                <p className={styles.modalSubtitle}>{t.lookupSubtitle}</p>
+                <motion.button onClick={handleCloseLookupModal} className={styles.modalClose} whileHover={btnHover} whileTap={btnTap}>
+                  <FontAwesomeIcon icon={faXmark} />
+                </motion.button>
+              </div>
 
-            <div className={styles.modalBody}>
-              {(!searchResult || searchResult === "NOT_FOUND") ? (
-                // Search Form
-                <form onSubmit={handleLookupSubmit} className={styles.bookingForm}>
-                  {searchResult === "NOT_FOUND" && (
-                    <div className={styles.errorAlert}>
-                      {t.lookupNotFound}
-                    </div>
-                  )}
-
-                  <div className={styles.formGroup} style={{ position: "relative" }}>
-                    <label className={styles.formLabel} style={{ textAlign: "center", marginBottom: "0.5rem", display: "block" }}>
-                      {t.labelLookupCode}
-                    </label>
-                    <div
-                      className={styles.charInputContainer}
-                      onClick={() => charInputRef.current?.focus()}
+              <div className={styles.modalBody}>
+                <AnimatePresence mode="wait">
+                  {(!searchResult || searchResult === "NOT_FOUND") ? (
+                    // Search Form
+                    <motion.form
+                      key="search"
+                      onSubmit={handleLookupSubmit}
+                      className={styles.bookingForm}
+                      initial={{ opacity: 0, y: 12 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -12 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <input
-                        ref={charInputRef}
-                        type="text"
-                        value={lookupCode}
-                        onChange={(e) => handleLookupCodeChange(e.target.value)}
-                        maxLength={12}
-                        className={styles.hiddenCharInput}
-                        autoFocus
-                      />
-                      <div className={styles.charBoxRow}>
-                        {Array.from({ length: 12 }).map((_, index) => {
-                          const char = lookupCode[index] || "";
-                          const isFocused = lookupCode.length === index && searchResult !== "NOT_FOUND";
-                          const isHyphen = index === 3 || index === 8;
-
-                          return (
-                            <div
-                              key={index}
-                              className={`${styles.charBox} ${isFocused ? styles.charBoxFocused : ""} ${
-                                isHyphen ? styles.charBoxHyphen : ""
-                              }`}
-                            >
-                              {isHyphen ? "-" : char}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className={styles.pasteCodeBtn}
-                      onClick={handlePasteCode}
-                    >
-                      <FontAwesomeIcon icon={faCopy} />
-                      {lang === "id" ? "Tempel Kode" : "Paste Code"}
-                    </button>
-                  </div>
-
-                  <button type="submit" className={styles.formSubmitBtn} style={{ marginTop: "1rem" }}>
-                    <span>{t.btnLookupSearch}</span>
-                  </button>
-                </form>
-              ) : (
-                // Search Result Found - Display E-Ticket or Progress Timeline
-                <div className={styles.ticketWrapper}>
-                  {searchResult.status === "PENDING" ? (
-                    // Animasi proses verifikasi
-                    <div className={styles.timelineWrapper}>
-                      <div className={styles.timelineTitle}>
-                        {lang === "id" ? "Status Booking" : "Booking Status"}
-                      </div>
-                      <div className={styles.timelineSteps}>
-                        {/* Step 1: Verifikasi Data Pemesan */}
-                        <div className={`${styles.timelineStep} ${lookupStep >= 1 ? styles.stepActive : ""} ${lookupStep > 1 ? styles.stepCompleted : ""}`}>
-                          <div className={styles.stepIndicator}>
-                            {lookupStep > 1 ? <FontAwesomeIcon icon={faCheck} /> : "1"}
-                          </div>
-                          <div className={styles.stepInfo}>
-                            <div className={styles.stepName}>
-                              {lang === "id" ? "Proses Validasi" : "Validation Process"}
-                            </div>
-                            <div className={styles.stepDesc}>
-                              {lang === "id" ? "Memeriksa detail booking oleh sistem" : "Checking booking details by system"}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Step 2: Menunggu Verifikasi */}
-                        <div className={`${styles.timelineStep} ${lookupStep >= 2 ? styles.stepActive : ""} ${lookupStep > 2 ? styles.stepCompleted : ""}`}>
-                          <div className={styles.stepIndicator}>
-                            {lookupStep > 2 ? <FontAwesomeIcon icon={faCheck} /> : "2"}
-                          </div>
-                          <div className={styles.stepInfo}>
-                            <div className={styles.stepName}>
-                              {lang === "id" ? "Menunggu Verifikasi" : "Waiting for Verification"}
-                            </div>
-                            <div className={styles.stepDesc}>
-                              {lang === "id" ? "Bukti transfer sedang divalidasi oleh admin" : "Proof of transfer is being validated by admin"}
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Step 3: Proses Pembuatan Tiket */}
-                        <div className={`${styles.timelineStep} ${lookupStep >= 3 ? styles.stepActive : ""} ${lookupStep > 3 ? styles.stepCompleted : ""}`}>
-                          <div className={styles.stepIndicator}>
-                            {lookupStep > 3 ? <FontAwesomeIcon icon={faCheck} /> : "3"}
-                          </div>
-                          <div className={styles.stepInfo}>
-                            <div className={styles.stepName}>
-                              {lang === "id" ? "Proses Pembuatan Tiket" : "Ticket Creation"}
-                            </div>
-                            <div className={styles.stepDesc}>
-                              {lang === "id" ? "Mengalokasikan kuota dan menerbitkan e-tiket" : "Allocating quota and generating e-ticket"}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    // Tiket CONFIRMED
-                    <div className={styles.ticket}>
-                      <div className={styles.ticketTop}>
-                        <div className={styles.ticketTopRow}>
-                          <div>
-                            <div className={styles.ticketBrand}>{t.ticketBrand}</div>
-                            <div className={styles.ticketClassName}>{searchResult.eventName}</div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className={styles.ticketBottom}>
-                        <div className={styles.ticketInfoList}>
-                          <div className={styles.ticketInfoGroup}>
-                            <span className={styles.ticketLabel}>{t.ticketLabelParticipant}</span>
-                            <span className={styles.ticketVal}>{searchResult.name}</span>
-                          </div>
-                          <div className={styles.ticketInfoGroup}>
-                            <span className={styles.ticketLabel}>{t.ticketLabelDate}</span>
-                            <span className={styles.ticketVal}>{searchResult.date}</span>
-                          </div>
-                          <div className={styles.ticketInfoGroup}>
-                            <span className={styles.ticketLabel}>{t.ticketLabelTime}</span>
-                            <span className={styles.ticketVal}>{searchResult.time}</span>
-                          </div>
-                          <div className={styles.ticketInfoGroup}>
-                            <span className={styles.ticketLabel}>{t.ticketLabelInstructor}</span>
-                            <span className={styles.ticketVal}>{searchResult.instructor}</span>
-                          </div>
-                          <div className={styles.ticketInfoGroup}>
-                            <span className={styles.ticketLabel}>{t.ticketLabelPrice}</span>
-                            <span className={styles.ticketVal}>{searchResult.price}</span>
-                          </div>
-                          <div className={styles.ticketInfoGroup}>
-                            <span className={styles.ticketLabel}>{t.ticketLabelPlace}</span>
-                            <span className={styles.ticketVal}>{t.ticketPlaceVal}</span>
-                          </div>
-                        </div>
-
-                        <div className={styles.ticketQrCol}>
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${searchResult.code}&bgcolor=ffffff`}
-                            alt="QR Code"
-                            width={90}
-                            height={90}
-                            className={styles.ticketQr}
-                          />
-                          <button
-                            type="button"
-                            onClick={() => setFullQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${searchResult.code}&bgcolor=ffffff`)}
-                            className={styles.viewQrBtn}
+                      <AnimatePresence>
+                        {searchResult === "NOT_FOUND" && (
+                          <motion.div
+                            className={styles.errorAlert}
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.25 }}
                           >
-                            {lang === "id" ? "Lihat QR" : "View QR"}
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                            {t.lookupNotFound}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
 
-                  <div className={styles.lookupFooter}>
-                    <button
-                      type="button"
-                      onClick={() => window.open("https://wa.me/6281234567890?text=Halo%20Admin%20Serene%20Soul,%20saya%20ingin%20melaporkan%20kendala%20verifikasi%20tiket.", "_blank")}
-                      className={styles.reportBtn}
+                      <div className={styles.formGroup} style={{ position: "relative" }}>
+                        <label className={styles.formLabel} style={{ textAlign: "center", marginBottom: "0.5rem", display: "block" }}>
+                          {t.labelLookupCode}
+                        </label>
+                        <div
+                          className={styles.charInputContainer}
+                          onClick={() => charInputRef.current?.focus()}
+                        >
+                          <input
+                            ref={charInputRef}
+                            type="text"
+                            value={lookupCode}
+                            onChange={(e) => handleLookupCodeChange(e.target.value)}
+                            maxLength={12}
+                            className={styles.hiddenCharInput}
+                            autoFocus
+                          />
+                          <div className={styles.charBoxRow}>
+                            {Array.from({ length: 12 }).map((_, index) => {
+                              const char = lookupCode[index] || "";
+                              const isFocused = lookupCode.length === index && searchResult !== "NOT_FOUND";
+                              const isHyphen = index === 3 || index === 8;
+
+                              return (
+                                <motion.div
+                                  key={index}
+                                  className={`${styles.charBox} ${isFocused ? styles.charBoxFocused : ""} ${
+                                    isHyphen ? styles.charBoxHyphen : ""
+                                  }`}
+                                  animate={char && !isHyphen ? { scale: [1, 1.18, 1] } : {}}
+                                  transition={{ duration: 0.18 }}
+                                >
+                                  {isHyphen ? "-" : char}
+                                </motion.div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                        <motion.button
+                          type="button"
+                          className={styles.pasteCodeBtn}
+                          onClick={handlePasteCode}
+                          whileHover={btnHover}
+                          whileTap={btnTap}
+                        >
+                          <FontAwesomeIcon icon={faCopy} />
+                          {lang === "id" ? "Tempel Kode" : "Paste Code"}
+                        </motion.button>
+                      </div>
+
+                      <motion.button type="submit" className={styles.formSubmitBtn} style={{ marginTop: "1rem" }} whileHover={btnHover} whileTap={btnTap}>
+                        <span>{t.btnLookupSearch}</span>
+                      </motion.button>
+                    </motion.form>
+                  ) : (
+                    // Search Result Found - Display E-Ticket or Progress Timeline
+                    <motion.div
+                      key="result"
+                      className={styles.ticketWrapper}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -16 }}
+                      transition={{ duration: 0.35 }}
                     >
-                      {lang === "id" ? "Laporkan Kendala" : "Report Issue"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleCloseLookupModal}
-                      className={styles.doneBtnLookup}
-                    >
-                      {t.ticketClose}
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+                      <AnimatePresence mode="wait">
+                        {searchResult.status === "PENDING" ? (
+                          // Animasi proses verifikasi
+                          <motion.div
+                            key="pending"
+                            className={styles.timelineWrapper}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <div className={styles.timelineTitle}>
+                              {lang === "id" ? "Status Booking" : "Booking Status"}
+                            </div>
+                            <div className={styles.timelineSteps}>
+                              {/* Step 1 */}
+                              <motion.div
+                                className={`${styles.timelineStep} ${lookupStep >= 1 ? styles.stepActive : ""} ${lookupStep > 1 ? styles.stepCompleted : ""}`}
+                                initial={{ opacity: 0, x: -12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.05 }}
+                              >
+                                <div className={styles.stepIndicator}>
+                                  <AnimatePresence mode="wait" initial={false}>
+                                    <motion.span
+                                      key={lookupStep > 1 ? "check1" : "num1"}
+                                      initial={{ scale: 0, rotate: -30 }}
+                                      animate={{ scale: 1, rotate: 0 }}
+                                      exit={{ scale: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                    >
+                                      {lookupStep > 1 ? <FontAwesomeIcon icon={faCheck} /> : "1"}
+                                    </motion.span>
+                                  </AnimatePresence>
+                                </div>
+                                <div className={styles.stepInfo}>
+                                  <div className={styles.stepName}>
+                                    {lang === "id" ? "Proses Validasi" : "Validation Process"}
+                                  </div>
+                                  <div className={styles.stepDesc}>
+                                    {lang === "id" ? "Memeriksa detail booking oleh sistem" : "Checking booking details by system"}
+                                  </div>
+                                </div>
+                              </motion.div>
+
+                              {/* Step 2 */}
+                              <motion.div
+                                className={`${styles.timelineStep} ${lookupStep >= 2 ? styles.stepActive : ""} ${lookupStep > 2 ? styles.stepCompleted : ""}`}
+                                initial={{ opacity: 0, x: -12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.12 }}
+                              >
+                                <div className={styles.stepIndicator}>
+                                  <AnimatePresence mode="wait" initial={false}>
+                                    <motion.span
+                                      key={lookupStep > 2 ? "check2" : "num2"}
+                                      initial={{ scale: 0, rotate: -30 }}
+                                      animate={{ scale: 1, rotate: 0 }}
+                                      exit={{ scale: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                    >
+                                      {lookupStep > 2 ? <FontAwesomeIcon icon={faCheck} /> : "2"}
+                                    </motion.span>
+                                  </AnimatePresence>
+                                </div>
+                                <div className={styles.stepInfo}>
+                                  <div className={styles.stepName}>
+                                    {lang === "id" ? "Menunggu Verifikasi" : "Waiting for Verification"}
+                                  </div>
+                                  <div className={styles.stepDesc}>
+                                    {lang === "id" ? "Bukti transfer sedang divalidasi oleh admin" : "Proof of transfer is being validated by admin"}
+                                  </div>
+                                </div>
+                              </motion.div>
+
+                              {/* Step 3 */}
+                              <motion.div
+                                className={`${styles.timelineStep} ${lookupStep >= 3 ? styles.stepActive : ""} ${lookupStep > 3 ? styles.stepCompleted : ""}`}
+                                initial={{ opacity: 0, x: -12 }}
+                                animate={{ opacity: 1, x: 0 }}
+                                transition={{ delay: 0.2 }}
+                              >
+                                <div className={styles.stepIndicator}>
+                                  <AnimatePresence mode="wait" initial={false}>
+                                    <motion.span
+                                      key={lookupStep > 3 ? "check3" : "num3"}
+                                      initial={{ scale: 0, rotate: -30 }}
+                                      animate={{ scale: 1, rotate: 0 }}
+                                      exit={{ scale: 0 }}
+                                      transition={{ duration: 0.2 }}
+                                    >
+                                      {lookupStep > 3 ? <FontAwesomeIcon icon={faCheck} /> : "3"}
+                                    </motion.span>
+                                  </AnimatePresence>
+                                </div>
+                                <div className={styles.stepInfo}>
+                                  <div className={styles.stepName}>
+                                    {lang === "id" ? "Proses Pembuatan Tiket" : "Ticket Creation"}
+                                  </div>
+                                  <div className={styles.stepDesc}>
+                                    {lang === "id" ? "Mengalokasikan kuota dan menerbitkan e-tiket" : "Allocating quota and generating e-ticket"}
+                                  </div>
+                                </div>
+                              </motion.div>
+                            </div>
+                          </motion.div>
+                        ) : (
+                          // Tiket CONFIRMED
+                          <motion.div
+                            key="confirmed"
+                            className={styles.ticket}
+                            initial={{ opacity: 0, scale: 0.94 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.94 }}
+                            transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
+                          >
+                            <div className={styles.ticketTop}>
+                              <div className={styles.ticketTopRow}>
+                                <div>
+                                  <div className={styles.ticketBrand}>{t.ticketBrand}</div>
+                                  <div className={styles.ticketClassName}>{searchResult.eventName}</div>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div className={styles.ticketBottom}>
+                              <motion.div
+                                className={styles.ticketInfoList}
+                                variants={staggerFast}
+                                initial="hidden"
+                                animate="show"
+                              >
+                                <motion.div className={styles.ticketInfoGroup} variants={fadeUp}>
+                                  <span className={styles.ticketLabel}>{t.ticketLabelParticipant}</span>
+                                  <span className={styles.ticketVal}>{searchResult.name}</span>
+                                </motion.div>
+                                <motion.div className={styles.ticketInfoGroup} variants={fadeUp}>
+                                  <span className={styles.ticketLabel}>{t.ticketLabelDate}</span>
+                                  <span className={styles.ticketVal}>{searchResult.date}</span>
+                                </motion.div>
+                                <motion.div className={styles.ticketInfoGroup} variants={fadeUp}>
+                                  <span className={styles.ticketLabel}>{t.ticketLabelTime}</span>
+                                  <span className={styles.ticketVal}>{searchResult.time}</span>
+                                </motion.div>
+                                <motion.div className={styles.ticketInfoGroup} variants={fadeUp}>
+                                  <span className={styles.ticketLabel}>{t.ticketLabelInstructor}</span>
+                                  <span className={styles.ticketVal}>{searchResult.instructor}</span>
+                                </motion.div>
+                                <motion.div className={styles.ticketInfoGroup} variants={fadeUp}>
+                                  <span className={styles.ticketLabel}>{t.ticketLabelPrice}</span>
+                                  <span className={styles.ticketVal}>{searchResult.price}</span>
+                                </motion.div>
+                                <motion.div className={styles.ticketInfoGroup} variants={fadeUp}>
+                                  <span className={styles.ticketLabel}>{t.ticketLabelPlace}</span>
+                                  <span className={styles.ticketVal}>{t.ticketPlaceVal}</span>
+                                </motion.div>
+                              </motion.div>
+
+                              <motion.div
+                                className={styles.ticketQrCol}
+                                initial={{ opacity: 0, scale: 0.8 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: 0.3, duration: 0.35, type: "spring", stiffness: 220, damping: 18 }}
+                              >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                <img
+                                  src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${searchResult.code}&bgcolor=ffffff`}
+                                  alt="QR Code"
+                                  width={90}
+                                  height={90}
+                                  className={styles.ticketQr}
+                                />
+                                <motion.button
+                                  type="button"
+                                  onClick={() => setFullQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${searchResult.code}&bgcolor=ffffff`)}
+                                  className={styles.viewQrBtn}
+                                  whileHover={btnHover}
+                                  whileTap={btnTap}
+                                >
+                                  {lang === "id" ? "Lihat QR" : "View QR"}
+                                </motion.button>
+                              </motion.div>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+
+                      <motion.div
+                        className={styles.lookupFooter}
+                        initial={{ opacity: 0, y: 8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.25 }}
+                      >
+                        <motion.button
+                          type="button"
+                          onClick={() => window.open("https://wa.me/6281234567890?text=Halo%20Admin%20Serene%20Soul,%20saya%20ingin%20melaporkan%20kendala%20verifikasi%20tiket.", "_blank")}
+                          className={styles.reportBtn}
+                          whileHover={btnHover}
+                          whileTap={btnTap}
+                        >
+                          {lang === "id" ? "Laporkan Kendala" : "Report Issue"}
+                        </motion.button>
+                        <motion.button
+                          type="button"
+                          onClick={handleCloseLookupModal}
+                          className={styles.doneBtnLookup}
+                          whileHover={btnHover}
+                          whileTap={btnTap}
+                        >
+                          {t.ticketClose}
+                        </motion.button>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* FULLSCREEN QR CODE OVERLAY MODAL */}
-      {fullQrUrl && (
-        <div className={styles.fullQrOverlay} onClick={() => setFullQrUrl(null)}>
-          <div className={styles.fullQrContent} onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className={styles.fullQrClose}
-              onClick={() => setFullQrUrl(null)}
-              aria-label="Close fullscreen QR"
+      <AnimatePresence>
+        {fullQrUrl && (
+          <motion.div
+            className={styles.fullQrOverlay}
+            variants={overlayVariant}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+            onClick={() => setFullQrUrl(null)}
+          >
+            <motion.div
+              className={styles.fullQrContent}
+              variants={modalVariantDesktop}
+              initial="hidden"
+              animate="show"
+              exit="exit"
+              onClick={(e) => e.stopPropagation()}
             >
-              <FontAwesomeIcon icon={faXmark} />
-            </button>
-            <h3 className={styles.fullQrTitle}>
-              {lang === "id" ? "E-Ticket QR Code" : "E-Ticket QR Code"}
-            </h3>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={fullQrUrl} alt="QR Code Large" className={styles.largeQrImg} />
-            <p className={styles.fullQrSubtitle}>
-              {searchResult ? searchResult.code : ""}
-            </p>
-          </div>
-        </div>
-      )}
+              <motion.button
+                type="button"
+                className={styles.fullQrClose}
+                onClick={() => setFullQrUrl(null)}
+                aria-label="Close fullscreen QR"
+                whileHover={btnHover}
+                whileTap={btnTap}
+              >
+                <FontAwesomeIcon icon={faXmark} />
+              </motion.button>
+              <motion.h3
+                className={styles.fullQrTitle}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.12 }}
+              >
+                {lang === "id" ? "E-Ticket QR Code" : "E-Ticket QR Code"}
+              </motion.h3>
+              <motion.img
+                src={fullQrUrl}
+                alt="QR Code Large"
+                className={styles.largeQrImg}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.15, type: "spring", stiffness: 220, damping: 18 }}
+              />
+              <motion.p
+                className={styles.fullQrSubtitle}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                {searchResult ? searchResult.code : ""}
+              </motion.p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
