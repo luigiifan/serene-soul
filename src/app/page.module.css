@@ -237,6 +237,24 @@
   border: 1px solid var(--border-color);
   letter-spacing: 0.5px;
   text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+.tagline::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.55) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  animation: taglineShine 2.4s ease-in-out infinite;
 }
 
 .heroTitle {
@@ -1084,6 +1102,7 @@
   align-items: center;
   text-align: center;
   animation: fadeIn 0.4s ease-out;
+  gap: 0.75rem;
 }
 
 .successIcon {
@@ -1397,6 +1416,12 @@
   animation-delay: 0.45s;
 }
 
+@keyframes taglineShine {
+  0% { left: -75%; }
+  60% { left: 125%; }
+  100% { left: 125%; }
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -1450,6 +1475,42 @@
   .btnPrimary,
   .btnSecondary {
     width: 100%;
+  }
+
+  .tagline {
+    background: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tagline::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.45) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    animation: taglineShine 2.4s ease-in-out infinite;
+  }
+
+  .btnSecondary {
+    background: #ffffff;
+    border: 2px solid var(--primary);
+    color: var(--text-main);
+  }
+
+  .btnSecondary:hover {
+    background: #ffffff;
+    border-color: var(--primary);
+    color: var(--primary);
   }
 
   /* Sections */
@@ -1919,6 +1980,7 @@
   animation: fadeIn 0.4s ease-out;
   text-align: left;
   box-sizing: border-box;
+  width: 100%;
 }
 
 .timelineTitle {
@@ -1956,16 +2018,20 @@
   gap: 1rem;
   position: relative;
   z-index: 2;
-  opacity: 0.5;
   transition: all 0.3s ease;
 }
 
-.stepActive {
+.timelineStep .stepInfo {
+  opacity: 0.45;
+  transition: opacity 0.3s ease;
+}
+
+.stepActive .stepInfo {
   opacity: 1;
 }
 
-.stepCompleted {
-  opacity: 0.85;
+.stepCompleted .stepInfo {
+  opacity: 0.75;
 }
 
 .stepIndicator {
@@ -2041,7 +2107,6 @@
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 100%;
-  margin-top: 1.5rem;
 }
 
 .reportBtn {

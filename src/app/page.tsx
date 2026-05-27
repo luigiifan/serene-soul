@@ -4,9 +4,9 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faLeaf, faArrowRight, faMusic,
-  faChild, faCalendarDays, faLocationDot, faXmark,
-  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars, faUpload, faCopy, faTicket
+  faArrowRight,
+  faCalendarDays, faLocationDot, faXmark,
+  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars, faUpload, faCopy, faTicket, faCheck
 } from "@fortawesome/free-solid-svg-icons";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./page.module.css";
@@ -97,7 +97,7 @@ const TRANSLATIONS = {
     transferFileLabel: "File terpilih:",
     detailsSubtitle: "Acara Terdekat",
     metaDetailLabel: "DETAIL ACARA",
-    metaDate: "Hari & Tanggal",
+    metaDate: "Tanggal",
     metaDateVal: "",
     metaTime: "Waktu Sesi",
     metaInstructor: "Guru Pengajar",
@@ -212,7 +212,7 @@ const TRANSLATIONS = {
     transferFileLabel: "Selected file:",
     detailsSubtitle: "Upcoming Event",
     metaDetailLabel: "EVENT DETAILS",
-    metaDate: "Day & Date",
+    metaDate: "Date",
     metaDateVal: "",
     metaTime: "Session Time",
     metaInstructor: "Instructor",
@@ -295,7 +295,6 @@ export default function Home() {
   // Modal Registration State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isTicketOpen, setIsTicketOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const modalBodyRef = useRef<HTMLDivElement>(null);
   const charInputRef = useRef<HTMLInputElement>(null);
@@ -303,7 +302,6 @@ export default function Home() {
 
   // Form Fields State
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [agree, setAgree] = useState(false);
@@ -314,9 +312,7 @@ export default function Home() {
   // Ticket Lookup Modal States
   const [isLookupOpen, setIsLookupOpen] = useState(false);
   const [lookupCode, setLookupCode] = useState("");
-  const [lookupName, setLookupName] = useState("");
   const [searchResult, setSearchResult] = useState<any | null>(null);
-  const [searchAttempted, setSearchAttempted] = useState(false);
   const [lookupStep, setLookupStep] = useState<number>(1);
   const [fullQrUrl, setFullQrUrl] = useState<string | null>(null);
 
@@ -417,7 +413,6 @@ export default function Home() {
     setBookingSuccess(false);
     // Reset form fields
     setName("");
-    setEmail("");
     setPhone("");
     setNotes("");
     setAgree(false);
@@ -428,7 +423,6 @@ export default function Home() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setBookingSuccess(false);
-    setIsTicketOpen(false);
   };
 
   const handleCopyAccount = () => {
@@ -465,9 +459,7 @@ export default function Home() {
   const handleOpenLookupModal = () => {
     setIsLookupOpen(true);
     setLookupCode("");
-    setLookupName("");
     setSearchResult(null);
-    setSearchAttempted(false);
   };
 
   const handleCloseLookupModal = () => {
@@ -478,7 +470,6 @@ export default function Home() {
     e.preventDefault();
     if (!lookupCode) return;
 
-    setSearchAttempted(true);
     const sanitizeCode = (code: string) => code.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
     const found = bookings.find(
       (b) => sanitizeCode(b.code) === sanitizeCode(lookupCode)
@@ -522,7 +513,6 @@ export default function Home() {
   const activeEvent = lang === "id" ? FEATURED_EVENT : FEATURED_EVENT_EN;
 
   const isFull = activeEvent.spotsLeft === 0;
-  const isAlmostFull = activeEvent.spotsLeft > 0 && activeEvent.spotsLeft <= 4;
 
   return (
     <div style={{ position: "relative" }}>
@@ -1187,25 +1177,16 @@ export default function Home() {
               ) : (
                 // Search Result Found - Display E-Ticket or Progress Timeline
                 <div className={styles.ticketWrapper}>
-                  {/* Status Indicator - Show only when CONFIRMED */}
-                  {searchResult.status === "CONFIRMED" && (
-                    <div className={`${styles.statusBadge} ${styles.statusConfirmed}`}>
-                      <span className={styles.statusDot} />
-                      <span>{t.statusConfirmed}</span>
-                    </div>
-                  )}
-
                   {searchResult.status === "PENDING" ? (
-                    // Beautiful Visual Process Timeline
-                    <div className={styles.timelineWrapper} style={{ marginTop: "0.5rem", width: "100%" }}>
+                    // Animasi proses verifikasi
+                    <div className={styles.timelineWrapper}>
                       <div className={styles.timelineTitle}>
-                        {lang === "id" ? "Proses Verifikasi Tiket" : "Ticket Verification Process"}
+                        {lang === "id" ? "Status Booking" : "Booking Status"}
                       </div>
                       <div className={styles.timelineSteps}>
-                        {/* Step 1: Menunggu Verifikasi */}
                         <div className={`${styles.timelineStep} ${lookupStep >= 1 ? styles.stepActive : ""} ${lookupStep > 1 ? styles.stepCompleted : ""}`}>
                           <div className={styles.stepIndicator}>
-                            {lookupStep > 1 ? "✓" : "1"}
+                            {lookupStep > 1 ? <FontAwesomeIcon icon={faCheck} /> : "1"}
                           </div>
                           <div className={styles.stepInfo}>
                             <div className={styles.stepName}>
@@ -1217,10 +1198,9 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* Step 2: Proses Pembuatan Tiket */}
                         <div className={`${styles.timelineStep} ${lookupStep >= 2 ? styles.stepActive : ""} ${lookupStep > 2 ? styles.stepCompleted : ""}`}>
                           <div className={styles.stepIndicator}>
-                            {lookupStep > 2 ? "✓" : "2"}
+                            {lookupStep > 2 ? <FontAwesomeIcon icon={faCheck} /> : "2"}
                           </div>
                           <div className={styles.stepInfo}>
                             <div className={styles.stepName}>
@@ -1232,10 +1212,9 @@ export default function Home() {
                           </div>
                         </div>
 
-                        {/* Step 3: Berhasil */}
                         <div className={`${styles.timelineStep} ${lookupStep >= 3 ? styles.stepActive : ""}`}>
                           <div className={styles.stepIndicator}>
-                            {lookupStep >= 3 ? "✓" : "3"}
+                            {lookupStep >= 3 ? <FontAwesomeIcon icon={faCheck} /> : "3"}
                           </div>
                           <div className={styles.stepInfo}>
                             <div className={styles.stepName}>
@@ -1249,8 +1228,8 @@ export default function Home() {
                       </div>
                     </div>
                   ) : (
-                    // Display E-Ticket (when CONFIRMED)
-                    <div className={styles.ticket} style={{ marginTop: "1rem" }}>
+                    // Tiket CONFIRMED
+                    <div className={styles.ticket}>
                       <div className={styles.ticketTop}>
                         <div className={styles.ticketTopRow}>
                           <div>
