@@ -1544,7 +1544,7 @@
   }
 
   .modalContent {
-    max-height: 92vh;
+    max-height: 85vh;
     border-radius: var(--radius-md) var(--radius-md) 0 0;
   }
 
@@ -1557,7 +1557,7 @@
   }
 
   .modalBody {
-    padding: 1rem 1.25rem;
+    padding: 1rem 1.25rem 2rem;
   }
 
   .bookingForm {
