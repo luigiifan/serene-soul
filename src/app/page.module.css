@@ -1708,6 +1708,16 @@
   line-height: 1.4;
 }
 
+.uploadFormat {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  opacity: 0.8;
+  margin-top: 0.25rem;
+}
+
+
 .uploadPreviewWrapper {
   display: flex;
   flex-direction: column;

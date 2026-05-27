@@ -51,11 +51,11 @@ const TRANSLATIONS = {
     navDetails: "Jadwal",
     navFaq: "FAQ",
     navBtn: "E-Tiket",
-    lookupTitle: "Cek E-Tiket Anda",
+    lookupTitle: "E-Tiket",
     lookupSubtitle: "Masukkan kode booking untuk memeriksa status tiket.",
     labelLookupCode: "Kode Booking",
     labelLookupName: "Nama Pemesan *",
-    btnLookupSearch: "Cari Status Tiket",
+    btnLookupSearch: "Cek Status E-Tiket",
     lookupNotFound: "Tiket tidak ditemukan. Silakan periksa kembali Kode Booking dan Nama Pemesan Anda.",
     statusPending: "SEDANG DIPROSES",
     statusConfirmed: "PEMBAYARAN DIKONFIRMASI",
@@ -93,7 +93,8 @@ const TRANSLATIONS = {
     transferAccount: "Nomor Rekening",
     transferRecipient: "Atas Nama",
     transferAmount: "Jumlah Transfer",
-    transferPlaceholder: "Pilih file atau seret screenshot bukti transfer Anda di sini (PNG, JPG, JPEG)",
+    transferPlaceholder: "Pilih file atau seret screenshot bukti transfer di sini",
+    transferFormat: "(PNG, JPG, JPEG)",
     transferFileLabel: "File terpilih:",
     detailsSubtitle: "Acara Terdekat",
     metaDetailLabel: "DETAIL ACARA",
@@ -164,11 +165,11 @@ const TRANSLATIONS = {
     navDetails: "Schedule",
     navFaq: "FAQ",
     navBtn: "E-Ticket",
-    lookupTitle: "Check Your E-Ticket",
+    lookupTitle: "E-Ticket",
     lookupSubtitle: "Enter the booking code to check ticket status.",
     labelLookupCode: "Booking Code",
     labelLookupName: "Booker's Name *",
-    btnLookupSearch: "Search Ticket Status",
+    btnLookupSearch: "Check E-Ticket Status",
     lookupNotFound: "Ticket not found. Please double-check your Booking Code and Booker's Name.",
     statusPending: "PROCESSING",
     statusConfirmed: "PAYMENT CONFIRMED",
@@ -206,7 +207,8 @@ const TRANSLATIONS = {
     transferAccount: "Account Number",
     transferRecipient: "Account Holder",
     transferAmount: "Transfer Amount",
-    transferPlaceholder: "Select file or drag screenshot proof of transfer here (PNG, JPG, JPEG)",
+    transferPlaceholder: "Select file or drag screenshot proof of transfer here",
+    transferFormat: "(PNG, JPG, JPEG)",
     transferFileLabel: "Selected file:",
     detailsSubtitle: "Upcoming Event",
     metaDetailLabel: "EVENT DETAILS",
@@ -1079,6 +1081,9 @@ export default function Home() {
                         <FontAwesomeIcon icon={faUpload} className={styles.uploadIcon} />
                         <span className={styles.uploadPlaceholder}>
                           {t.transferPlaceholder}
+                          <span className={styles.uploadFormat}>
+                            {t.transferFormat}
+                          </span>
                         </span>
                       </label>
                     )}
