@@ -919,10 +919,12 @@
   position: absolute;
   top: 1.25rem;
   right: 1.5rem;
-  color: var(--text-muted);
+  color: var(--primary);
   width: 28px;
   height: 28px;
   border-radius: var(--radius-full);
+  background: var(--primary-light);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -930,8 +932,9 @@
 }
 
 .modalClose:hover {
-  background: var(--primary-light);
-  color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 
 .modalBody {
