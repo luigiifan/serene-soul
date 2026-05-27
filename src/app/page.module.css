@@ -414,6 +414,21 @@
   color: var(--text-main);
   line-height: 1.1;
   letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+  will-change: transform, opacity;
+  animation: tickSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes tickSlide {
+  0% {
+    transform: translateY(-8px) scale(0.95);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
 }
 
 .countdownLabel {

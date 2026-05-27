@@ -56,7 +56,7 @@ const TRANSLATIONS = {
     labelLookupCode: "Kode Booking",
     labelLookupName: "Nama Pemesan *",
     btnLookupSearch: "Cek Status E-Tiket",
-    lookupNotFound: "Tiket tidak ditemukan. Silakan periksa kembali Kode Booking dan Nama Pemesan Anda.",
+    lookupNotFound: "Tiket tidak ditemukan. Silakan periksa kembali Kode Booking.",
     statusPending: "SEDANG DIPROSES",
     statusConfirmed: "PEMBAYARAN DIKONFIRMASI",
     pendingInfoTitle: "Pendaftaran Berhasil!",
@@ -170,7 +170,7 @@ const TRANSLATIONS = {
     labelLookupCode: "Booking Code",
     labelLookupName: "Booker's Name *",
     btnLookupSearch: "Check E-Ticket Status",
-    lookupNotFound: "Ticket not found. Please double-check your Booking Code and Booker's Name.",
+    lookupNotFound: "Ticket not found. Please double-check your Booking Code.",
     statusPending: "PROCESSING",
     statusConfirmed: "PAYMENT CONFIRMED",
     pendingInfoTitle: "Registration Successful!",
@@ -713,28 +713,28 @@ export default function Home() {
               <div style={{ marginTop: "1rem" }}>
                 <div className={styles.countdownGrid}>
                   <div className={styles.countdownItem}>
-                    <span className={styles.countdownNumber}>
+                    <span key={timeLeft.days} className={styles.countdownNumber}>
                       {timeLeft.days.toString().padStart(2, "0")}
                     </span>
                     <span className={styles.countdownLabel}>{t.countdownDays}</span>
                   </div>
                   <div className={styles.countdownDivider}>:</div>
                   <div className={styles.countdownItem}>
-                    <span className={styles.countdownNumber}>
+                    <span key={timeLeft.hours} className={styles.countdownNumber}>
                       {timeLeft.hours.toString().padStart(2, "0")}
                     </span>
                     <span className={styles.countdownLabel}>{t.countdownHours}</span>
                   </div>
                   <div className={styles.countdownDivider}>:</div>
                   <div className={styles.countdownItem}>
-                    <span className={styles.countdownNumber}>
+                    <span key={timeLeft.minutes} className={styles.countdownNumber}>
                       {timeLeft.minutes.toString().padStart(2, "0")}
                     </span>
                     <span className={styles.countdownLabel}>{t.countdownMinutes}</span>
                   </div>
                   <div className={styles.countdownDivider}>:</div>
                   <div className={styles.countdownItem}>
-                    <span className={styles.countdownNumber}>
+                    <span key={timeLeft.seconds} className={styles.countdownNumber}>
                       {timeLeft.seconds.toString().padStart(2, "0")}
                     </span>
                     <span className={styles.countdownLabel}>{t.countdownSeconds}</span>
