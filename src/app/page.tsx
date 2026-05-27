@@ -437,6 +437,16 @@ export default function Home() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handlePasteCode = async () => {
+    try {
+      const text = await navigator.clipboard.readText();
+      handleLookupCodeChange(text);
+      charInputRef.current?.focus();
+    } catch {
+      charInputRef.current?.focus();
+    }
+  };
+
   const handleLookupCodeChange = (val: string) => {
     let letters = val.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().substring(0, 10);
     let formatted = "";
@@ -1160,6 +1170,14 @@ export default function Home() {
                         })}
                       </div>
                     </div>
+                    <button
+                      type="button"
+                      className={styles.pasteCodeBtn}
+                      onClick={handlePasteCode}
+                    >
+                      <FontAwesomeIcon icon={faCopy} />
+                      {lang === "id" ? "Tempel Kode" : "Paste Code"}
+                    </button>
                   </div>
 
                   <button type="submit" className={styles.formSubmitBtn} style={{ marginTop: "1rem" }}>

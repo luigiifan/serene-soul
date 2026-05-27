@@ -2271,3 +2271,33 @@
     gap: 0.18rem;
   }
 }
+
+/* Paste Code Button — mobile only */
+.pasteCodeBtn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .pasteCodeBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-top: 0.65rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-full);
+    padding: 0.4rem 1rem;
+    background: transparent;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    align-self: center;
+  }
+
+  .pasteCodeBtn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+  }
+}
