@@ -9,7 +9,7 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Serene Soul | Premium Yoga Events & Classes",
+  title: "Serene Soul: Yoga Events & Classes",
   description: "Temukan kedamaian dan harmoni tubuh melalui kelas yoga premium kami. Vinyasa, Hatha, Yin, dan meditasi dengan aksen pink & putih yang elegan.",
 };
 
