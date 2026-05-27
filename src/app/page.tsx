@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faLeaf, faArrowRight, faMusic,
   faChild, faCalendarDays, faLocationDot, faXmark,
-  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars,
+  faChevronDown, faPhone, faEnvelope, faCircleCheck, faUser, faRankingStar, faClock, faBars, faUpload, faCopy, faTicket
 } from "@fortawesome/free-solid-svg-icons";
 import { faInstagram } from "@fortawesome/free-brands-svg-icons";
 import styles from "./page.module.css";
@@ -50,7 +50,18 @@ const TRANSLATIONS = {
     navAbout: "Tentang",
     navDetails: "Jadwal",
     navFaq: "FAQ",
-    navBtn: "Daftar Sesi",
+    navBtn: "E-Tiket",
+    lookupTitle: "Cek E-Tiket Anda",
+    lookupSubtitle: "Masukkan kode booking untuk memeriksa status tiket.",
+    labelLookupCode: "Kode Booking",
+    labelLookupName: "Nama Pemesan *",
+    btnLookupSearch: "Cari Status Tiket",
+    lookupNotFound: "Tiket tidak ditemukan. Silakan periksa kembali Kode Booking dan Nama Pemesan Anda.",
+    statusPending: "SEDANG DIPROSES",
+    statusConfirmed: "PEMBAYARAN DIKONFIRMASI",
+    pendingInfoTitle: "Pendaftaran Berhasil!",
+    pendingInfoDesc: "Bukti transfer sedang diverifikasi oleh admin.",
+    bookingCodeLabel: "KODE BOOKING ANDA",
     heroTag: "Kelas Yoga 2026",
     heroTitle: "Bergerak penuh niat, bernapas dengan damai",
     heroDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.",
@@ -60,15 +71,30 @@ const TRANSLATIONS = {
     countdownHours: "Jam",
     countdownMinutes: "Menit",
     countdownSeconds: "Detik",
-    aboutSubtitle: "Manfaat Sesi",
-    aboutTitle: "Kembalikan Keseimbangan Diri",
-    aboutDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip.",
-    benefit1Title: "Relaksasi Sound Healing",
-    benefit1Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.",
-    benefit2Title: "Yoga Gerak Lembut",
-    benefit2Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip.",
-    benefit3Title: "Keheningan Studio Zen",
-    benefit3Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.",
+    aboutSubtitle: "Tentang SERENE SOUL",
+    aboutTitle: "Perjalanan Penyembuhan Jiwa",
+    aboutDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    timelineTitle: "Fasilitas & Benefit Sesi",
+    timeSlot1: "01",
+    timeline1Title: "Matras & Blok Yoga Gratis",
+    timeline1Desc: "Kami menyediakan matras yoga berkualitas tinggi dan blok penopang secara gratis untuk kenyamanan latihan Anda.",
+    timeSlot2: "02",
+    timeline2Title: "Minuman Hidrasi Menyegarkan",
+    timeline2Desc: "Nikmati pilihan air kelapa organik segar atau teh herbal hangat setelah sesi selesai untuk memulihkan hidrasi tubuh.",
+    timeSlot3: "03",
+    timeline3Title: "Sound Healing Mangkuk Kristal",
+    timeline3Desc: "Rasakan vibrasi penyembuhan batin yang mendalam melalui terapi suara mangkuk kristal murni untuk melepas penat.",
+    timeSlot4: "04",
+    timeline4Title: "Minyak Aromaterapi Premium",
+    timeline4Desc: "Hirup kesegaran minyak aromaterapi lavender dan peppermint organik yang menenangkan pikiran selama relaksasi.",
+    formLabelTransfer: "Unggah Bukti Transfer *",
+    transferInfoTitle: "Informasi Rekening Transfer",
+    transferBank: "Bank",
+    transferAccount: "Nomor Rekening",
+    transferRecipient: "Atas Nama",
+    transferAmount: "Jumlah Transfer",
+    transferPlaceholder: "Pilih file atau seret screenshot bukti transfer Anda di sini (PNG, JPG, JPEG)",
+    transferFileLabel: "File terpilih:",
     detailsSubtitle: "Acara Terdekat",
     metaDetailLabel: "DETAIL ACARA",
     metaDate: "Hari & Tanggal",
@@ -93,9 +119,9 @@ const TRANSLATIONS = {
     footerTerms: "Syarat Ketentuan",
     footerPrivacy: "Kebijakan Privasi",
     modalTitle: "Daftar Sesi",
-    modalTitleSuccess: "Pendaftaran Berhasil!",
+    modalTitleSuccess: "",
     modalSubtitle: "Silakan isi data lengkap Anda untuk reservasi.",
-    modalSubtitleSuccess: "E-ticket Anda telah diterbitkan di bawah ini.",
+    modalSubtitleSuccess: "E-Tiket akan segera diproses oleh sistem.",
     formLabelName: "Nama Lengkap *",
     formPlaceholderName: "",
     formLabelEmail: "Alamat Email *",
@@ -106,7 +132,7 @@ const TRANSLATIONS = {
     formSubmit: "Selesaikan Pendaftaran",
     ticketConfirm: "Pendaftaran Terkonfirmasi!",
     ticketSuccessDesc: "Selamat, pendaftaran Anda berhasil. Tiket resmi telah dikirim ke email ",
-    ticketBrand: "SERENE SOUL LIMITED EVENT",
+    ticketBrand: "BY SERENE SOUL",
     ticketLabelParticipant: "Peserta",
     ticketLabelDate: "Tanggal",
     ticketLabelTime: "Waktu",
@@ -139,7 +165,18 @@ const TRANSLATIONS = {
     navAbout: "About",
     navDetails: "Schedule",
     navFaq: "FAQ",
-    navBtn: "Book Session",
+    navBtn: "E-Ticket",
+    lookupTitle: "Check Your E-Ticket",
+    lookupSubtitle: "Enter the booking code to check ticket status.",
+    labelLookupCode: "Booking Code",
+    labelLookupName: "Booker's Name *",
+    btnLookupSearch: "Search Ticket Status",
+    lookupNotFound: "Ticket not found. Please double-check your Booking Code and Booker's Name.",
+    statusPending: "PROCESSING",
+    statusConfirmed: "PAYMENT CONFIRMED",
+    pendingInfoTitle: "Registration Successful!",
+    pendingInfoDesc: "Proof of transfer is being verified by our admin.",
+    bookingCodeLabel: "YOUR BOOKING CODE",
     heroTag: "2026 Yoga Class",
     heroTitle: "Move with intention, breathe with peace",
     heroDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim.",
@@ -149,15 +186,30 @@ const TRANSLATIONS = {
     countdownHours: "Hours",
     countdownMinutes: "Minutes",
     countdownSeconds: "Seconds",
-    aboutSubtitle: "Session Benefits",
-    aboutTitle: "Restore Your Inner Balance",
-    aboutDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip.",
-    benefit1Title: "Sound Healing Relaxation",
-    benefit1Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua enim ad minim.",
-    benefit2Title: "Gentle Yoga Stretch",
-    benefit2Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi aliquip.",
-    benefit3Title: "Zen Studio Serenity",
-    benefit3Desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu.",
+    aboutSubtitle: "About SERENE SOUL",
+    aboutTitle: "A Journey of Soul Healing",
+    aboutDesc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    timelineTitle: "Session Facilities & Benefits",
+    timeSlot1: "01",
+    timeline1Title: "Complimentary Mats & Blocks",
+    timeline1Desc: "We provide high-quality yoga mats and support blocks for free to ensure your practice is perfectly comfortable.",
+    timeSlot2: "02",
+    timeline2Title: "Refreshing Hydration & Tea",
+    timeline2Desc: "Enjoy organic coconut water or fresh warm herbal tea after your practice to replenish your body's hydration.",
+    timeSlot3: "03",
+    timeline3Title: "Pure Sound Healing Session",
+    timeline3Desc: "Immerse yourself in deep therapeutic vibrations from pure crystal singing bowls to release pent-up stress.",
+    timeSlot4: "04",
+    timeline4Title: "Premium Aromatherapy Oils",
+    timeline4Desc: "Inhale therapeutic organic lavender and peppermint essential oils to soothe your mind throughout the practice.",
+    formLabelTransfer: "Upload Proof of Transfer *",
+    transferInfoTitle: "Bank Transfer Information",
+    transferBank: "Bank",
+    transferAccount: "Account Number",
+    transferRecipient: "Account Holder",
+    transferAmount: "Transfer Amount",
+    transferPlaceholder: "Select file or drag screenshot proof of transfer here (PNG, JPG, JPEG)",
+    transferFileLabel: "Selected file:",
     detailsSubtitle: "Upcoming Event",
     metaDetailLabel: "EVENT DETAILS",
     metaDate: "Day & Date",
@@ -182,9 +234,9 @@ const TRANSLATIONS = {
     footerTerms: "Terms & Conditions",
     footerPrivacy: "Privacy Policy",
     modalTitle: "Book Session",
-    modalTitleSuccess: "Registration Successful!",
+    modalTitleSuccess: "",
     modalSubtitle: "Please fill in your details for reservation.",
-    modalSubtitleSuccess: "Your e-ticket has been generated below.",
+    modalSubtitleSuccess: "E-Ticket will be processed by the system immediately.",
     formLabelName: "Your Full Name *",
     formPlaceholderName: "",
     formLabelEmail: "Email Address *",
@@ -195,7 +247,7 @@ const TRANSLATIONS = {
     formSubmit: "Complete Registration",
     ticketConfirm: "Registration Confirmed!",
     ticketSuccessDesc: "Congratulations, your registration is successfully confirmed. Official ticket has been sent to email ",
-    ticketBrand: "SERENE SOUL LIMITED EVENT",
+    ticketBrand: "BY SERENE SOUL",
     ticketLabelParticipant: "Participant",
     ticketLabelDate: "Date",
     ticketLabelTime: "Time",
@@ -246,6 +298,7 @@ export default function Home() {
   const [isTicketOpen, setIsTicketOpen] = useState(false);
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const modalBodyRef = useRef<HTMLDivElement>(null);
+  const charInputRef = useRef<HTMLInputElement>(null);
   const [ticketCode, setTicketCode] = useState("");
 
   // Form Fields State
@@ -254,6 +307,46 @@ export default function Home() {
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [agree, setAgree] = useState(false);
+  const [screenshot, setScreenshot] = useState<File | null>(null);
+  const [screenshotUrl, setScreenshotUrl] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  // Ticket Lookup Modal States
+  const [isLookupOpen, setIsLookupOpen] = useState(false);
+  const [lookupCode, setLookupCode] = useState("");
+  const [lookupName, setLookupName] = useState("");
+  const [searchResult, setSearchResult] = useState<any | null>(null);
+  const [searchAttempted, setSearchAttempted] = useState(false);
+  const [lookupStep, setLookupStep] = useState<number>(1);
+  const [fullQrUrl, setFullQrUrl] = useState<string | null>(null);
+
+  // Local state representing bookings database
+  const [bookings, setBookings] = useState<any[]>([
+    {
+      code: "SRN-7777-SND",
+      name: "Savitri Devi",
+      email: "savitri.devi@gmail.com",
+      phone: "+62 812-3456-7890",
+      eventName: "Morning Yoga Class with Coach Nita Rosalina",
+      date: "22 Juni 2026",
+      time: "08:00 - 09:30 WIB",
+      instructor: "Nita Rosalina",
+      price: "Rp 75.000",
+      status: "CONFIRMED"
+    },
+    {
+      code: "SRN-8888-SND",
+      name: "John Doe",
+      email: "john.doe@example.com",
+      phone: "+62 821-9876-5432",
+      eventName: "Morning Yoga Class with Coach Nita Rosalina",
+      date: "June 22, 2026",
+      time: "08:00 - 09:30 WIB",
+      instructor: "Nita Rosalina",
+      price: "IDR 75.000",
+      status: "PENDING"
+    }
+  ]);
 
   // Mount detection to avoid NextJS Hydration mismatches with live dates
   useEffect(() => {
@@ -284,6 +377,40 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  // Automatic dummy verification delay process when viewing PENDING tickets
+  useEffect(() => {
+    if (searchResult && searchResult !== "NOT_FOUND" && searchResult.status === "PENDING") {
+      setLookupStep(1);
+
+      const timer1 = setTimeout(() => {
+        setLookupStep(2);
+      }, 3000);
+
+      const timer2 = setTimeout(() => {
+        setLookupStep(3);
+      }, 6000);
+
+      const timer3 = setTimeout(() => {
+        setBookings((prev) =>
+          prev.map((b) =>
+            b.code.trim().toLowerCase() === searchResult.code.trim().toLowerCase()
+              ? { ...b, status: "CONFIRMED" }
+              : b
+          )
+        );
+        setSearchResult((prev: any) =>
+          prev && prev !== "NOT_FOUND" ? { ...prev, status: "CONFIRMED" } : prev
+        );
+      }, 7500);
+
+      return () => {
+        clearTimeout(timer1);
+        clearTimeout(timer2);
+        clearTimeout(timer3);
+      };
+    }
+  }, [searchResult]);
+
   const handleOpenModal = () => {
     if (FEATURED_EVENT.spotsLeft <= 0) return;
     setIsModalOpen(true);
@@ -294,6 +421,8 @@ export default function Home() {
     setPhone("");
     setNotes("");
     setAgree(false);
+    setScreenshot(null);
+    setScreenshotUrl(null);
   };
 
   const handleCloseModal = () => {
@@ -302,12 +431,73 @@ export default function Home() {
     setIsTicketOpen(false);
   };
 
+  const handleCopyAccount = () => {
+    navigator.clipboard.writeText("8690413829");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleLookupCodeChange = (val: string) => {
+    let letters = val.replace(/[^a-zA-Z0-9]/g, "").toUpperCase().substring(0, 10);
+    let formatted = "";
+    if (letters.length > 0) {
+      formatted += letters.substring(0, 3);
+    }
+    if (letters.length > 3) {
+      formatted += "-" + letters.substring(3, 7);
+    }
+    if (letters.length > 7) {
+      formatted += "-" + letters.substring(7, 10);
+    }
+    setLookupCode(formatted);
+  };
+
+  const handleOpenLookupModal = () => {
+    setIsLookupOpen(true);
+    setLookupCode("");
+    setLookupName("");
+    setSearchResult(null);
+    setSearchAttempted(false);
+  };
+
+  const handleCloseLookupModal = () => {
+    setIsLookupOpen(false);
+  };
+
+  const handleLookupSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!lookupCode) return;
+
+    setSearchAttempted(true);
+    const sanitizeCode = (code: string) => code.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    const found = bookings.find(
+      (b) => sanitizeCode(b.code) === sanitizeCode(lookupCode)
+    );
+    setSearchResult(found || "NOT_FOUND");
+  };
+
   const handleBookingSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !email || !phone || !agree) return;
+    if (!name || !phone || !agree || !screenshot) return;
 
     const randomCode = `SRN-${Math.floor(1000 + Math.random() * 9000)}-SND`;
     setTicketCode(randomCode);
+
+    // Save to local state database
+    const newBooking = {
+      code: randomCode,
+      name: name,
+      email: "",
+      phone: phone,
+      eventName: activeEvent.name,
+      date: activeEvent.date,
+      time: activeEvent.time,
+      instructor: activeEvent.instructor,
+      price: activeEvent.price,
+      status: "PENDING"
+    };
+    setBookings((prev) => [...prev, newBooking]);
+
     setBookingSuccess(true);
     setTimeout(() => {
       modalBodyRef.current?.scrollTo({ top: 0, behavior: "smooth" });
@@ -337,18 +527,18 @@ export default function Home() {
             {/* Language Switcher Text ID/EN before About */}
             <div className={styles.langContainer}>
               <button
-                onClick={() => setLang("id")}
-                className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
-                title="Bahasa Indonesia"
-              >
-                <span>ID</span>
-              </button>
-              <button
                 onClick={() => setLang("en")}
                 className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
                 title="English"
               >
                 <span>EN</span>
+              </button>
+              <button
+                onClick={() => setLang("id")}
+                className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
+                title="Bahasa Indonesia"
+              >
+                <span>ID</span>
               </button>
             </div>
 
@@ -362,9 +552,10 @@ export default function Home() {
               {t.navFaq}
             </a>
 
-            <a href="#details" className={styles.navBtn}>
+            <button onClick={handleOpenLookupModal} className={styles.navBtn}>
+              <FontAwesomeIcon icon={faTicket} />
               {t.navBtn}
-            </a>
+            </button>
           </nav>
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -392,7 +583,16 @@ export default function Home() {
             <a href="#about" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navAbout}</a>
             <a href="#details" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navDetails}</a>
             <a href="#faqs" className={styles.mobileNavLink} onClick={() => setIsMobileMenuOpen(false)}>{t.navFaq}</a>
-            <a href="#details" className={styles.mobileNavBtn} onClick={() => setIsMobileMenuOpen(false)}>{t.navBtn}</a>
+            <button
+              className={styles.mobileNavBtn}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                handleOpenLookupModal();
+              }}
+            >
+              <FontAwesomeIcon icon={faTicket} />
+              {t.navBtn}
+            </button>
           </div>
         )}
       </header>
@@ -435,21 +635,22 @@ export default function Home() {
           </p>
         </div>
 
-        <div className={styles.benefitsGrid}>
-          <div className={`${styles.benefitCard} ${styles.animateFadeInUp} ${styles.animateDelay1}`}>
-            <div className={styles.benefitIcon}><FontAwesomeIcon icon={faMusic} /></div>
-            <h3>{t.benefit1Title}</h3>
-            <p>{t.benefit1Desc}</p>
+        <div className={styles.benefitsCardGrid}>
+          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
+            <span className={styles.benefitCardNumber}>{t.timeSlot1}</span>
+            <h3 className={styles.benefitCardTitleLabel}>{t.timeline1Title}</h3>
           </div>
-          <div className={`${styles.benefitCard} ${styles.animateFadeInUp} ${styles.animateDelay2}`}>
-            <div className={styles.benefitIcon}><FontAwesomeIcon icon={faChild} /></div>
-            <h3>{t.benefit2Title}</h3>
-            <p>{t.benefit2Desc}</p>
+          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
+            <span className={styles.benefitCardNumber}>{t.timeSlot2}</span>
+            <h3 className={styles.benefitCardTitleLabel}>{t.timeline2Title}</h3>
           </div>
-          <div className={`${styles.benefitCard} ${styles.animateFadeInUp} ${styles.animateDelay3}`}>
-            <div className={styles.benefitIcon}><FontAwesomeIcon icon={faLeaf} /></div>
-            <h3>{t.benefit3Title}</h3>
-            <p>{t.benefit3Desc}</p>
+          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
+            <span className={styles.benefitCardNumber}>{t.timeSlot3}</span>
+            <h3 className={styles.benefitCardTitleLabel}>{t.timeline3Title}</h3>
+          </div>
+          <div className={`${styles.benefitGridCard} ${styles.animateFadeInUp}`}>
+            <span className={styles.benefitCardNumber}>{t.timeSlot4}</span>
+            <h3 className={styles.benefitCardTitleLabel}>{t.timeline4Title}</h3>
           </div>
         </div>
       </section>
@@ -704,9 +905,6 @@ export default function Home() {
                   <div className={styles.classSummary}>
                     <div>
                       <div className={styles.summaryTitle}>{activeEvent.name}</div>
-                      <div className={styles.summaryInstructor}>
-                        {t.scheduleLabel}: {activeEvent.date} | {activeEvent.time}
-                      </div>
                       <div className={styles.summarySlots}>
                         <div className={styles.summarySlotsLabel}>
                           <span>{t.slotsLabel}</span>
@@ -738,20 +936,7 @@ export default function Home() {
                     />
                   </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="emailAddress" className={styles.formLabel}>
-                      {t.formLabelEmail}
-                    </label>
-                    <input
-                      id="emailAddress"
-                      type="email"
-                      required
-                      placeholder=""
-                      className={styles.formInput}
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                  </div>
+                  {/* Email field removed */}
 
                   <div className={styles.formGroup}>
                     <label htmlFor="phoneNumber" className={styles.formLabel}>
@@ -781,6 +966,79 @@ export default function Home() {
                     />
                   </div>
 
+                  <div className={styles.transferInfoBox}>
+                    <div className={styles.transferInfoTitle}>{t.transferInfoTitle}</div>
+                    <div className={styles.transferInfoRow}>
+                      <span>{t.transferBank}:</span>
+                      <strong>BCA</strong>
+                    </div>
+                    <div className={styles.transferInfoRow}>
+                      <span>{t.transferAccount}:</span>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                        <button
+                          type="button"
+                          onClick={handleCopyAccount}
+                          className={`${styles.copyBtn} ${copied ? styles.copyBtnCopied : ""}`}
+                          title={lang === "id" ? "Salin Nomor Rekening" : "Copy Account Number"}
+                        >
+                          <FontAwesomeIcon icon={copied ? faCircleCheck : faCopy} />
+                        </button>
+                        <strong>869-041-3829</strong>
+                      </div>
+                    </div>
+                    <div className={styles.transferInfoRow}>
+                      <span>{t.transferRecipient}:</span>
+                      <strong>Serene Soul Studio</strong>
+                    </div>
+                    <div className={styles.transferInfoRow}>
+                      <span>{t.transferAmount}:</span>
+                      <strong>{activeEvent.price}</strong>
+                    </div>
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>
+                      {t.formLabelTransfer}
+                    </label>
+                    <input
+                      type="file"
+                      id="screenshotUpload"
+                      accept="image/png, image/jpeg, image/jpg"
+                      required={!screenshot}
+                      className={styles.hiddenFileInput}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0] || null;
+                        setScreenshot(file);
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            setScreenshotUrl(reader.result as string);
+                          };
+                          reader.readAsDataURL(file);
+                        } else {
+                          setScreenshotUrl(null);
+                        }
+                      }}
+                    />
+                    {screenshotUrl ? (
+                      <div className={styles.uploadPreviewWrapper}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={screenshotUrl} alt="Preview" className={styles.screenshotPreviewImg} />
+                        <label htmlFor="screenshotUpload" className={styles.uploadChangeBtn}>
+                          <FontAwesomeIcon icon={faUpload} />
+                          {lang === "id" ? "Ganti Foto" : "Change Photo"}
+                        </label>
+                      </div>
+                    ) : (
+                      <label htmlFor="screenshotUpload" className={styles.uploadLabel}>
+                        <FontAwesomeIcon icon={faUpload} className={styles.uploadIcon} />
+                        <span className={styles.uploadPlaceholder}>
+                          {t.transferPlaceholder}
+                        </span>
+                      </label>
+                    )}
+                  </div>
+
                   <label className={styles.formTerms}>
                     <input
                       type="checkbox"
@@ -798,58 +1056,213 @@ export default function Home() {
                   </button>
                 </form>
               ) : (
-                // Successful E-Ticket Confirmation Display
+                // Successful Registration - Pending Admin Confirmation Screen
                 <div className={styles.ticketWrapper}>
                   <div className={styles.successIcon}>
                     <FontAwesomeIcon icon={faCircleCheck} />
                   </div>
-                  <h4 className={styles.successTitle}>{t.ticketConfirm}</h4>
+                  <h4 className={styles.successTitle}>{t.pendingInfoTitle}</h4>
                   <p className={styles.successDesc}>
-                    {t.ticketSuccessDesc} <strong>{email}</strong>.
+                    {t.pendingInfoDesc}
                   </p>
 
-                  <div className={styles.ticket}>
-                    <div className={styles.ticketTop}>
-                      <div className={styles.ticketTopRow}>
-                        <div>
-                          <div className={styles.ticketBrand}>{t.ticketBrand}</div>
-                          <div className={styles.ticketClassName}>{activeEvent.name}</div>
-                        </div>
-                        <button
-                          className={styles.ticketToggleBtn}
-                          onClick={() => setIsTicketOpen(!isTicketOpen)}
-                        >
-                          <span>{t.ticketView}</span>
-                          <FontAwesomeIcon
-                            icon={faChevronDown}
-                            style={{ transition: "transform 0.2s", transform: isTicketOpen ? "rotate(180deg)" : "rotate(0deg)" }}
-                          />
-                        </button>
+                  <div className={styles.pendingBookingCard}>
+                    <div className={styles.pendingCardHeader}>
+                      <span className={styles.pendingCardLabel}>{t.bookingCodeLabel}</span>
+                      <strong className={styles.pendingCardCode}>{ticketCode}</strong>
+                    </div>
+                    
+                    <div className={styles.pendingCardBody}>
+                      <div className={styles.pendingCardRow}>
+                        <span>{t.ticketLabelParticipant}:</span>
+                        <strong>{name}</strong>
+                      </div>
+                      <div className={styles.pendingCardRow}>
+                        <span>{t.ticketLabelDate}:</span>
+                        <strong>{activeEvent.date}</strong>
+                      </div>
+                      <div className={styles.pendingCardRow}>
+                        <span>{t.ticketLabelTime}:</span>
+                        <strong>{activeEvent.time}</strong>
+                      </div>
+                      <div className={styles.pendingCardRow}>
+                        <span>{t.ticketLabelPrice}:</span>
+                        <strong>{activeEvent.price}</strong>
                       </div>
                     </div>
+                  </div>
 
-                    {isTicketOpen && (
+                  <button onClick={handleCloseModal} className={styles.doneBtn}>
+                    {t.ticketClose}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* POPUP TICKET LOOKUP MODAL WINDOW */}
+      {isLookupOpen && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>{t.lookupTitle}</h3>
+              <p className={styles.modalSubtitle}>{t.lookupSubtitle}</p>
+              <button onClick={handleCloseLookupModal} className={styles.modalClose}>
+                <FontAwesomeIcon icon={faXmark} />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              {(!searchResult || searchResult === "NOT_FOUND") ? (
+                // Search Form
+                <form onSubmit={handleLookupSubmit} className={styles.bookingForm}>
+                  {searchResult === "NOT_FOUND" && (
+                    <div className={styles.errorAlert}>
+                      {t.lookupNotFound}
+                    </div>
+                  )}
+
+                  <div className={styles.formGroup} style={{ position: "relative" }}>
+                    <label className={styles.formLabel} style={{ textAlign: "center", marginBottom: "0.5rem", display: "block" }}>
+                      {t.labelLookupCode}
+                    </label>
+                    <div
+                      className={styles.charInputContainer}
+                      onClick={() => charInputRef.current?.focus()}
+                    >
+                      <input
+                        ref={charInputRef}
+                        type="text"
+                        value={lookupCode}
+                        onChange={(e) => handleLookupCodeChange(e.target.value)}
+                        maxLength={12}
+                        className={styles.hiddenCharInput}
+                        autoFocus
+                      />
+                      <div className={styles.charBoxRow}>
+                        {Array.from({ length: 12 }).map((_, index) => {
+                          const char = lookupCode[index] || "";
+                          const isFocused = lookupCode.length === index && searchResult !== "NOT_FOUND";
+                          const isHyphen = index === 3 || index === 8;
+
+                          return (
+                            <div
+                              key={index}
+                              className={`${styles.charBox} ${isFocused ? styles.charBoxFocused : ""} ${
+                                isHyphen ? styles.charBoxHyphen : ""
+                              }`}
+                            >
+                              {isHyphen ? "-" : char}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+
+                  <button type="submit" className={styles.formSubmitBtn} style={{ marginTop: "1rem" }}>
+                    <span>{t.btnLookupSearch}</span>
+                  </button>
+                </form>
+              ) : (
+                // Search Result Found - Display E-Ticket or Progress Timeline
+                <div className={styles.ticketWrapper}>
+                  {/* Status Indicator - Show only when CONFIRMED */}
+                  {searchResult.status === "CONFIRMED" && (
+                    <div className={`${styles.statusBadge} ${styles.statusConfirmed}`}>
+                      <span className={styles.statusDot} />
+                      <span>{t.statusConfirmed}</span>
+                    </div>
+                  )}
+
+                  {searchResult.status === "PENDING" ? (
+                    // Beautiful Visual Process Timeline
+                    <div className={styles.timelineWrapper} style={{ marginTop: "0.5rem", width: "100%" }}>
+                      <div className={styles.timelineTitle}>
+                        {lang === "id" ? "Proses Verifikasi Tiket" : "Ticket Verification Process"}
+                      </div>
+                      <div className={styles.timelineSteps}>
+                        {/* Step 1: Menunggu Verifikasi */}
+                        <div className={`${styles.timelineStep} ${lookupStep >= 1 ? styles.stepActive : ""} ${lookupStep > 1 ? styles.stepCompleted : ""}`}>
+                          <div className={styles.stepIndicator}>
+                            {lookupStep > 1 ? "✓" : "1"}
+                          </div>
+                          <div className={styles.stepInfo}>
+                            <div className={styles.stepName}>
+                              {lang === "id" ? "Menunggu Verifikasi" : "Waiting for Verification"}
+                            </div>
+                            <div className={styles.stepDesc}>
+                              {lang === "id" ? "Bukti transfer sedang divalidasi oleh admin" : "Proof of transfer is being validated by admin"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Step 2: Proses Pembuatan Tiket */}
+                        <div className={`${styles.timelineStep} ${lookupStep >= 2 ? styles.stepActive : ""} ${lookupStep > 2 ? styles.stepCompleted : ""}`}>
+                          <div className={styles.stepIndicator}>
+                            {lookupStep > 2 ? "✓" : "2"}
+                          </div>
+                          <div className={styles.stepInfo}>
+                            <div className={styles.stepName}>
+                              {lang === "id" ? "Proses Pembuatan Tiket" : "Ticket Creation"}
+                            </div>
+                            <div className={styles.stepDesc}>
+                              {lang === "id" ? "Mengalokasikan kuota dan menerbitkan e-tiket" : "Allocating quota and generating e-ticket"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Step 3: Berhasil */}
+                        <div className={`${styles.timelineStep} ${lookupStep >= 3 ? styles.stepActive : ""}`}>
+                          <div className={styles.stepIndicator}>
+                            {lookupStep >= 3 ? "✓" : "3"}
+                          </div>
+                          <div className={styles.stepInfo}>
+                            <div className={styles.stepName}>
+                              {lang === "id" ? "Berhasil" : "Success"}
+                            </div>
+                            <div className={styles.stepDesc}>
+                              {lang === "id" ? "Pembayaran terverifikasi dan tiket aktif" : "Payment verified and ticket activated"}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    // Display E-Ticket (when CONFIRMED)
+                    <div className={styles.ticket} style={{ marginTop: "1rem" }}>
+                      <div className={styles.ticketTop}>
+                        <div className={styles.ticketTopRow}>
+                          <div>
+                            <div className={styles.ticketBrand}>{t.ticketBrand}</div>
+                            <div className={styles.ticketClassName}>{searchResult.eventName}</div>
+                          </div>
+                        </div>
+                      </div>
+
                       <div className={styles.ticketBottom}>
                         <div className={styles.ticketInfoList}>
                           <div className={styles.ticketInfoGroup}>
                             <span className={styles.ticketLabel}>{t.ticketLabelParticipant}</span>
-                            <span className={styles.ticketVal}>{name}</span>
+                            <span className={styles.ticketVal}>{searchResult.name}</span>
                           </div>
                           <div className={styles.ticketInfoGroup}>
                             <span className={styles.ticketLabel}>{t.ticketLabelDate}</span>
-                            <span className={styles.ticketVal}>{activeEvent.date}</span>
+                            <span className={styles.ticketVal}>{searchResult.date}</span>
                           </div>
                           <div className={styles.ticketInfoGroup}>
                             <span className={styles.ticketLabel}>{t.ticketLabelTime}</span>
-                            <span className={styles.ticketVal}>{activeEvent.time}</span>
+                            <span className={styles.ticketVal}>{searchResult.time}</span>
                           </div>
                           <div className={styles.ticketInfoGroup}>
                             <span className={styles.ticketLabel}>{t.ticketLabelInstructor}</span>
-                            <span className={styles.ticketVal}>{activeEvent.instructor}</span>
+                            <span className={styles.ticketVal}>{searchResult.instructor}</span>
                           </div>
                           <div className={styles.ticketInfoGroup}>
                             <span className={styles.ticketLabel}>{t.ticketLabelPrice}</span>
-                            <span className={styles.ticketVal}>{activeEvent.price}</span>
+                            <span className={styles.ticketVal}>{searchResult.price}</span>
                           </div>
                           <div className={styles.ticketInfoGroup}>
                             <span className={styles.ticketLabel}>{t.ticketLabelPlace}</span>
@@ -860,23 +1273,67 @@ export default function Home() {
                         <div className={styles.ticketQrCol}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
-                            src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${ticketCode}&bgcolor=ffffff`}
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=90x90&data=${searchResult.code}&bgcolor=ffffff`}
                             alt="QR Code"
                             width={90}
                             height={90}
                             className={styles.ticketQr}
                           />
+                          <button
+                            type="button"
+                            onClick={() => setFullQrUrl(`https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${searchResult.code}&bgcolor=ffffff`)}
+                            className={styles.viewQrBtn}
+                          >
+                            {lang === "id" ? "Lihat QR" : "View QR"}
+                          </button>
                         </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  )}
 
-                  <button onClick={handleCloseModal} className={styles.doneBtn}>
-                    {t.ticketClose}
-                  </button>
+                  <div className={styles.lookupFooter}>
+                    <button
+                      type="button"
+                      onClick={() => window.open("https://wa.me/6281234567890?text=Halo%20Admin%20Serene%20Soul,%20saya%20ingin%20melaporkan%20kendala%20verifikasi%20tiket.", "_blank")}
+                      className={styles.reportBtn}
+                    >
+                      {lang === "id" ? "Laporkan Kendala" : "Report Issue"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleCloseLookupModal}
+                      className={styles.doneBtnLookup}
+                    >
+                      {t.ticketClose}
+                    </button>
+                  </div>
                 </div>
               )}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* FULLSCREEN QR CODE OVERLAY MODAL */}
+      {fullQrUrl && (
+        <div className={styles.fullQrOverlay} onClick={() => setFullQrUrl(null)}>
+          <div className={styles.fullQrContent} onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className={styles.fullQrClose}
+              onClick={() => setFullQrUrl(null)}
+              aria-label="Close fullscreen QR"
+            >
+              <FontAwesomeIcon icon={faXmark} />
+            </button>
+            <h3 className={styles.fullQrTitle}>
+              {lang === "id" ? "E-Ticket QR Code" : "E-Ticket QR Code"}
+            </h3>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={fullQrUrl} alt="QR Code Large" className={styles.largeQrImg} />
+            <p className={styles.fullQrSubtitle}>
+              {lang === "id" ? "Pindai saat memasuki studio" : "Scan when entering the studio"}
+            </p>
           </div>
         </div>
       )}

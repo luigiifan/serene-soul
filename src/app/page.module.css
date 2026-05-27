@@ -65,8 +65,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.4rem;
   white-space: nowrap;
-  /* Ensure it stays in one line */
 }
 
 .navBtn:hover {
@@ -167,9 +167,11 @@
   border-radius: var(--radius-full);
   font-weight: 600;
   font-size: 0.9rem;
-  text-align: center;
   margin-top: 1rem;
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
   transition: var(--transition-fast);
 }
 
@@ -345,7 +347,7 @@
     padding-top: 8rem;
     padding-bottom: 4rem;
     min-height: auto;
-    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.9) 100%), url('/hero_yoga_bg.png');
+    background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.85) 100%), url('/hero_yoga_bg.png');
     background-position: center;
   }
 
@@ -499,59 +501,77 @@
   line-height: 1.5;
 }
 
-/* Benefits Section */
-.benefitsGrid {
-  max-width: 1100px;
+/* Benefits Card Grid Section */
+.benefitsCardGrid {
+  max-width: 760px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.75rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
-.benefitCard {
-  background: var(--bg-base);
+.benefitGridCard {
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  padding: 2.25rem 1.75rem;
+  padding: 1.5rem 2rem;
   border-radius: var(--radius-md);
-  transition: var(--transition-fast);
   box-shadow: var(--shadow-subtle);
-  min-height: 250px;
-  /* Enforce stable height for both EN/ID descriptions */
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5rem;
+  transition: var(--transition-normal);
 }
 
-.benefitCard:hover {
-  border-color: var(--primary);
+.benefitGridCard:hover {
+  border-color: rgba(255, 111, 145, 0.25);
+  box-shadow: 0 8px 24px rgba(255, 111, 145, 0.04);
   transform: translateY(-2px);
 }
 
-.benefitIcon {
-  width: 44px;
-  height: 44px;
-  background: var(--primary-light);
+.benefitCardNumber {
+  font-size: 1.4rem;
+  font-weight: 800;
   color: var(--primary);
-  border-radius: var(--radius-sm);
+  opacity: 0.9;
+  line-height: 1;
+  background: var(--primary-light);
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem;
-  font-size: 1.4rem !important;
+  flex-shrink: 0;
   border: 1px solid rgba(255, 111, 145, 0.05);
 }
 
-.benefitCard h3 {
-  font-size: 1.15rem;
+.benefitCardTitleLabel {
+  font-size: 1.05rem;
   font-weight: 700;
-  margin-bottom: 0.6rem;
   color: var(--text-main);
+  line-height: 1.4;
+  margin: 0;
+  text-align: left;
 }
 
-.benefitCard p {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
+@media (max-width: 768px) {
+  .benefitsCardGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 500px;
+  }
+  .benefitGridCard {
+    padding: 1.25rem 1.5rem;
+    gap: 1.25rem;
+  }
+  .benefitCardNumber {
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+  }
+  .benefitCardTitleLabel {
+    font-size: 0.95rem;
+  }
 }
 
 /* Featured Spotlight Detail Section */
@@ -1165,12 +1185,14 @@
 
 .ticketQrCol {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   align-self: center;
   border-left: 1px dashed var(--border-color);
   padding-left: 1.25rem;
   height: 100%;
+  gap: 0.5rem;
 }
 
 .ticketQr {
@@ -1608,5 +1630,644 @@
 
   .footerBottom {
     max-width: 1300px;
+  }
+}
+
+/* ========== Manual Bank Transfer Payment Elements ========== */
+.transferInfoBox {
+  background: var(--bg-surface-alt);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  margin-top: 0.25rem;
+}
+
+.transferInfoTitle {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.transferInfoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.transferInfoRow span {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.transferInfoRow strong {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+.uploadContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.uploadLabel {
+  border: 2px dashed rgba(255, 111, 145, 0.35);
+  border-radius: var(--radius-sm);
+  padding: 1.2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  cursor: pointer;
+  background: rgba(255, 245, 247, 0.3);
+  transition: var(--transition-normal);
+  text-align: center;
+}
+
+.uploadLabel:hover {
+  background: rgba(255, 245, 247, 0.7);
+  border-color: var(--primary);
+}
+
+.uploadIcon {
+  color: var(--primary);
+  font-size: 1.6rem !important;
+}
+
+.uploadPlaceholder {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.uploadPreviewWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.screenshotPreviewImg {
+  max-width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
+  display: block;
+}
+
+.uploadChangeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-full);
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background: transparent;
+}
+
+.uploadChangeBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* Pending Confirmation Ticket Styles */
+.pendingIcon {
+  width: 100px;
+  height: 100px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 193, 7, 0.08);
+  color: #ffb300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3.5rem !important;
+  margin-bottom: 0.8rem;
+  border: 1px solid rgba(255, 193, 7, 0.2);
+}
+
+.pendingBookingCard {
+  background: var(--bg-surface-alt);
+  border: 1px dashed var(--border-color);
+  border-radius: var(--radius-sm);
+  width: 100%;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+}
+
+.pendingCardHeader {
+  background: rgba(255, 111, 145, 0.04);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pendingCardLabel {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.8px;
+}
+
+.pendingCardCode {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.5px;
+}
+
+.pendingCardBody {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.pendingCardRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.82rem;
+}
+
+.pendingCardRow span {
+  color: var(--text-muted);
+}
+
+.pendingCardRow strong {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+/* Error Alert */
+.errorAlert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: left;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+}
+
+/* Status Badges */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.statusConfirmed {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.statusPending {
+  background: #fffbeb;
+  color: #92400e;
+  border: 1px solid #fde68a;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+}
+
+.statusConfirmed .statusDot {
+  background: #22c55e;
+}
+
+.statusPending .statusDot {
+  background: #f59e0b;
+}
+
+/* Copy Button Elements */
+.copyBtn {
+  background: var(--primary-light);
+  border: 1px solid rgba(255, 111, 145, 0.15);
+  color: var(--primary);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+}
+
+.copyBtn:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+.copyBtnCopied {
+  background: #f0fdf4 !important;
+  color: #16a34a !important;
+  border-color: #bbf7d0 !important;
+}
+
+/* E-Ticket Pending Verification Timeline */
+.timelineWrapper {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-subtle);
+  animation: fadeIn 0.4s ease-out;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.timelineTitle {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 0.5rem;
+}
+
+.timelineSteps {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.timelineSteps::before {
+  content: '';
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  bottom: 15px;
+  width: 2px;
+  background: var(--border-color);
+  z-index: 1;
+}
+
+.timelineStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  position: relative;
+  z-index: 2;
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.stepActive {
+  opacity: 1;
+}
+
+.stepCompleted {
+  opacity: 0.85;
+}
+
+.stepIndicator {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  border: 2px solid var(--border-color);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  z-index: 2;
+}
+
+.stepActive .stepIndicator {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(255, 111, 145, 0.15);
+  animation: stepPulse 2s infinite ease-in-out;
+}
+
+.stepCompleted .stepIndicator {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  color: #16a34a;
+  box-shadow: none;
+  animation: none;
+}
+
+.stepInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding-top: 0.15rem;
+}
+
+.stepName {
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--text-main);
+  transition: color 0.3s ease;
+}
+
+.stepActive .stepName {
+  color: var(--primary);
+}
+
+.stepCompleted .stepName {
+  color: #15803d;
+}
+
+.stepDesc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.3;
+}
+
+@keyframes stepPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+
+/* Symmetrical Lookup Modal Footer Buttons */
+.lookupFooter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1.5rem;
+}
+
+.reportBtn {
+  border: 1px solid var(--border-color);
+  background: transparent;
+  color: var(--text-muted);
+  border-radius: var(--radius-full);
+  height: 42px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+}
+
+.reportBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-light);
+}
+
+.doneBtnLookup {
+  background: var(--text-main);
+  color: #ffffff;
+  border-radius: var(--radius-full);
+  height: 42px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  box-sizing: border-box;
+  width: 100%;
+  cursor: pointer;
+}
+
+.doneBtnLookup:hover {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+.viewQrBtn {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: var(--primary-light);
+  border: 1px solid rgba(255, 111, 145, 0.15);
+  border-radius: var(--radius-sm);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: var(--transition-fast);
+  line-height: 1;
+}
+
+.viewQrBtn:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+}
+
+/* Fullscreen QR Code Overlay Modal */
+.fullQrOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(32, 23, 25, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.fullQrContent {
+  background: #ffffff;
+  padding: 2.25rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 25px 60px rgba(32, 23, 25, 0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  max-width: 380px;
+  width: 100%;
+  animation: scaleIn 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-sizing: border-box;
+}
+
+.fullQrClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: var(--text-muted);
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+  cursor: pointer;
+}
+
+.fullQrClose:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.fullQrTitle {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.3px;
+}
+
+.largeQrImg {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-subtle);
+  display: block;
+  width: 240px;
+  height: 240px;
+}
+
+.fullQrSubtitle {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 1.5rem;
+  letter-spacing: 0.2px;
+}
+
+/* Custom OTP-Style Character Code Boxes */
+.charInputContainer {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  cursor: text;
+  box-sizing: border-box;
+}
+
+.hiddenCharInput {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  z-index: 10;
+  border: none;
+  outline: none;
+  cursor: text;
+  background: transparent;
+  color: transparent;
+  caret-color: transparent; /* hide keyboard typing cursor */
+}
+
+.charBoxRow {
+  display: flex;
+  gap: 0.25rem;
+  justify-content: center;
+  width: 100%;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.charBox {
+  width: 28px;
+  height: 38px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  color: var(--text-main);
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-subtle);
+  box-sizing: border-box;
+  text-transform: uppercase;
+}
+
+.charBoxFocused {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(255, 111, 145, 0.12);
+  background: var(--primary-light);
+  transform: translateY(-1px);
+}
+
+.charBoxHyphen {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 1.1rem;
+  width: 14px;
+}
+
+/* Adjust size on smaller viewports */
+@media (max-width: 480px) {
+  .charBox {
+    width: 23px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+  
+  .charBoxHyphen {
+    width: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .charBoxRow {
+    gap: 0.18rem;
   }
 }
