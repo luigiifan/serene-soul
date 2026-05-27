@@ -62,9 +62,9 @@ const overlayVariant: Variants = {
 };
 
 const drawerVariant: Variants = {
-  hidden: { opacity: 0, y: -12, scaleY: 0.92 },
-  show: { opacity: 1, y: 0, scaleY: 1, transition: { duration: 0.28, ease: easeOut } },
-  exit: { opacity: 0, y: -8, scaleY: 0.94, transition: { duration: 0.2, ease: "easeIn" } },
+  hidden: { opacity: 0, scaleY: 0.95 },
+  show: { opacity: 1, scaleY: 1, transition: { duration: 0.25, ease: easeOut } },
+  exit: { opacity: 0, scaleY: 0.95, transition: { duration: 0.18, ease: "easeIn" } },
 };
 
 const btnHover = { scale: 1.045, transition: { duration: 0.18, ease: "easeOut" as const } };
@@ -715,6 +715,7 @@ export default function Home() {
                 animate={{ opacity: 1, rotate: 0, scale: 1 }}
                 exit={{ opacity: 0, rotate: 45, scale: 0.7 }}
                 transition={{ duration: 0.2 }}
+                style={{ display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}
               >
                 <FontAwesomeIcon icon={isMobileMenuOpen ? faXmark : faBars} />
               </motion.span>
@@ -722,51 +723,66 @@ export default function Home() {
           </motion.button>
         </div>
 
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <motion.div
-              className={styles.mobileMenuDrawer}
-              variants={drawerVariant}
-              initial="hidden"
-              animate="show"
-              exit="exit"
-              style={{ transformOrigin: "top center" }}
-            >
-              <motion.div className={styles.mobileMenuLangRow} variants={fadeUp}>
-                <span className={styles.mobileMenuLangLabel}>Language</span>
-                <div className={styles.langContainer}>
-                  <motion.button
-                    onClick={() => setLang("id")}
-                    className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
-                    whileHover={linkHover} whileTap={btnTap}
-                  >ID</motion.button>
-                  <motion.button
-                    onClick={() => setLang("en")}
-                    className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
-                    whileHover={linkHover} whileTap={btnTap}
-                  >EN</motion.button>
-                </div>
-              </motion.div>
-              <motion.a href="#about" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navAbout}</motion.a>
-              <motion.a href="#details" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navDetails}</motion.a>
-              <motion.a href="#faqs" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navFaq}</motion.a>
-              <motion.button
-                className={styles.mobileNavBtn}
-                variants={fadeUp}
-                whileHover={btnHover}
-                whileTap={btnTap}
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  handleOpenLookupModal();
-                }}
-              >
-                <FontAwesomeIcon icon={faTicket} />
-                {t.navBtn}
-              </motion.button>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </motion.header>
+
+      {/* MOBILE MENU DRAWER — fixed, tepat di bawah header */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            className={styles.mobileMenuBackdrop}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            className={styles.mobileMenuDrawer}
+            variants={drawerVariant}
+            initial="hidden"
+            animate="show"
+            exit="exit"
+            style={{ transformOrigin: "top center" }}
+          >
+            <motion.div className={styles.mobileMenuLangRow} variants={fadeUp}>
+              <span className={styles.mobileMenuLangLabel}>Language</span>
+              <div className={styles.langContainer}>
+                <motion.button
+                  onClick={() => setLang("id")}
+                  className={`${styles.langItem} ${lang === "id" ? styles.langActive : ""}`}
+                  whileHover={linkHover} whileTap={btnTap}
+                >ID</motion.button>
+                <motion.button
+                  onClick={() => setLang("en")}
+                  className={`${styles.langItem} ${lang === "en" ? styles.langActive : ""}`}
+                  whileHover={linkHover} whileTap={btnTap}
+                >EN</motion.button>
+              </div>
+            </motion.div>
+            <motion.a href="#about" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navAbout}</motion.a>
+            <motion.a href="#details" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navDetails}</motion.a>
+            <motion.a href="#faqs" className={styles.mobileNavLink} variants={fadeUp} whileHover={linkHover} onClick={() => setIsMobileMenuOpen(false)}>{t.navFaq}</motion.a>
+            <motion.button
+              className={styles.mobileNavBtn}
+              variants={fadeUp}
+              whileHover={btnHover}
+              whileTap={btnTap}
+              onClick={() => {
+                setIsMobileMenuOpen(false);
+                handleOpenLookupModal();
+              }}
+            >
+              <FontAwesomeIcon icon={faTicket} />
+              {t.navBtn}
+            </motion.button>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* HERO SECTION */}
       <section className={styles.hero} id="home">
@@ -1452,17 +1468,30 @@ export default function Home() {
                         </div>
                       </motion.div>
 
-                      <motion.button
-                        onClick={handleCloseModal}
-                        className={styles.doneBtn}
+                      <motion.div
+                        className={styles.lookupFooter}
                         initial={{ opacity: 0, y: 8 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.48 }}
-                        whileHover={btnHover}
-                        whileTap={btnTap}
                       >
-                        {t.ticketClose}
-                      </motion.button>
+                        <motion.button
+                          type="button"
+                          onClick={() => window.open("https://wa.me/6281234567890?text=Halo%20Admin%20Serene%20Soul,%20saya%20ingin%20melaporkan%20kendala%20pendaftaran.", "_blank")}
+                          className={styles.reportBtn}
+                          whileHover={btnHover}
+                          whileTap={btnTap}
+                        >
+                          {lang === "id" ? "Laporkan Kendala" : "Report Issue"}
+                        </motion.button>
+                        <motion.button
+                          onClick={handleCloseModal}
+                          className={styles.doneBtnLookup}
+                          whileHover={btnHover}
+                          whileTap={btnTap}
+                        >
+                          {t.ticketClose}
+                        </motion.button>
+                      </motion.div>
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -1618,6 +1647,7 @@ export default function Home() {
                                       animate={{ scale: 1, rotate: 0 }}
                                       exit={{ scale: 0 }}
                                       transition={{ duration: 0.2 }}
+                                      style={{ display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}
                                     >
                                       {lookupStep > 1 ? <FontAwesomeIcon icon={faCheck} /> : "1"}
                                     </motion.span>
@@ -1648,6 +1678,7 @@ export default function Home() {
                                       animate={{ scale: 1, rotate: 0 }}
                                       exit={{ scale: 0 }}
                                       transition={{ duration: 0.2 }}
+                                      style={{ display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}
                                     >
                                       {lookupStep > 2 ? <FontAwesomeIcon icon={faCheck} /> : "2"}
                                     </motion.span>
@@ -1678,6 +1709,7 @@ export default function Home() {
                                       animate={{ scale: 1, rotate: 0 }}
                                       exit={{ scale: 0 }}
                                       transition={{ duration: 0.2 }}
+                                      style={{ display: "flex", alignItems: "center", justifyContent: "center", lineHeight: 1 }}
                                     >
                                       {lookupStep > 3 ? <FontAwesomeIcon icon={faCheck} /> : "3"}
                                     </motion.span>

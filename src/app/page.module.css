@@ -113,23 +113,44 @@
 /* Mobile Nav Toggle */
 .mobileMenuBtn {
   display: none;
-  font-size: 1.4rem !important;
+  font-size: 1.25rem;
   color: var(--text-main);
   width: 36px;
   height: 36px;
   align-items: center;
   justify-content: center;
   border-radius: var(--radius-sm);
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.mobileMenuBackdrop {
+  display: none;
+  position: fixed;
+  top: 65px; /* bawah header desktop */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(32, 23, 25, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: 98;
 }
 
 .mobileMenuDrawer {
-  border-top: 1px solid var(--border-color);
-  padding: 0.75rem 1.25rem 1.25rem;
-  display: flex;
+  display: none;
+  position: fixed;
+  top: 65px;
+  left: 0;
+  right: 0;
+  padding: 0 1.25rem 1.25rem;
   flex-direction: column;
   gap: 0;
   background: #fff;
-  animation: slideDown 0.2s ease-out;
+  z-index: 101;
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 8px 24px rgba(32, 23, 25, 0.06);
 }
 
 .mobileMenuLangRow {
@@ -191,6 +212,16 @@
 
   .mobileMenuBtn {
     display: flex;
+  }
+
+  .mobileMenuBackdrop {
+    display: block;
+    top: 65px;
+  }
+
+  .mobileMenuDrawer {
+    display: flex;
+    top: 65px;
   }
 }
 
@@ -1354,6 +1385,14 @@
   /* Header */
   .navContainer {
     padding: 0.85rem 1.25rem;
+  }
+
+  .mobileMenuBackdrop {
+    top: 57px;
+  }
+
+  .mobileMenuDrawer {
+    top: 57px;
   }
 
   .logo {
