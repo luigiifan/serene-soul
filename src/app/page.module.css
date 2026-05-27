@@ -392,33 +392,7 @@
   }
 }
 
-/* Countdown Section */
-.countdownSection {
-  background: var(--bg-surface-alt);
-  border-top: 1px solid var(--border-color);
-  border-bottom: 1px solid var(--border-color);
-  padding: 2.5rem 2rem;
-  text-align: center;
-  position: relative;
-}
-
-.countdownContainer {
-  max-width: 1100px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.countdownSubtitle {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: var(--primary);
-}
-
+/* Countdown */
 .countdownGrid {
   display: flex;
   align-items: center;
@@ -793,9 +767,6 @@
     gap: 1.25rem;
   }
 
-  .spotlightLeftCol {
-    max-width: 100%;
-  }
 }
 
 /* FAQ Accordion - Minimalist List Separator Style */
@@ -985,12 +956,6 @@
   color: var(--text-main);
 }
 
-.summaryInstructor {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  margin-top: 0.1rem;
-}
-
 .summarySlots {
   margin-top: 0.35rem;
   display: flex;
@@ -1123,12 +1088,13 @@
   font-size: 1.25rem;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0;
 }
 
 .successDesc {
   font-size: 0.85rem;
   color: var(--text-muted);
+  margin-top: -0.45rem;
   margin-bottom: 1.75rem;
   max-width: 300px;
   line-height: 1.4;
@@ -1222,31 +1188,8 @@
   display: block;
 }
 
-.ticketToggleBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  flex-shrink: 0;
-  border: 1px solid var(--border-color);
-  background: transparent;
-  color: var(--text-muted);
-  border-radius: var(--radius-full);
-  padding: 0.4rem 0.85rem;
-  font-weight: 600;
-  font-size: 0.75rem;
-  cursor: pointer;
-  transition: var(--transition-fast);
-  white-space: nowrap;
-}
-
-.ticketToggleBtn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-}
-
 .doneBtn {
-  margin-top: 1.75rem;
+  margin-top: 0.25rem;
   width: 100%;
   max-width: 180px;
   background: var(--text-main);
@@ -1453,7 +1396,12 @@
 
   /* Hero */
   .hero {
-    padding: 5.5rem 1.25rem 3rem;
+    padding: 5.5rem 1.25rem 2rem;
+  }
+
+  .heroContent {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
   }
 
   .heroTitle {
@@ -1529,17 +1477,6 @@
 
   .sectionDesc {
     font-size: 0.875rem;
-  }
-
-  /* Benefits */
-  .benefitsGrid {
-    gap: 1rem;
-    grid-template-columns: 1fr;
-  }
-
-  .benefitCard {
-    min-height: auto;
-    padding: 1.5rem 1.25rem;
   }
 
   /* Spotlight / Event Card */
@@ -1633,10 +1570,6 @@
     font-size: 0.8rem;
   }
 
-  .summaryInstructor {
-    font-size: 0.7rem;
-  }
-
   .summaryPrice {
     font-size: 0.95rem;
   }
@@ -1678,10 +1611,6 @@
 
   .sectionTitle {
     font-size: 2.5rem;
-  }
-
-  .benefitsGrid {
-    max-width: 1300px;
   }
 
   .classSection {
@@ -1836,7 +1765,7 @@
   border: 1px dashed var(--border-color);
   border-radius: var(--radius-sm);
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0;
   overflow: hidden;
 }
 
@@ -2211,10 +2140,12 @@
   position: absolute;
   top: 1rem;
   right: 1rem;
-  color: var(--text-muted);
+  color: var(--primary);
   width: 28px;
   height: 28px;
   border-radius: var(--radius-full);
+  background: var(--primary-light);
+  border: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2223,8 +2154,9 @@
 }
 
 .fullQrClose:hover {
-  background: var(--primary-light);
-  color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 
 .fullQrTitle {
@@ -2245,11 +2177,11 @@
 }
 
 .fullQrSubtitle {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--primary);
   margin-top: 1.5rem;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.8px;
 }
 
 /* Custom OTP-Style Character Code Boxes */

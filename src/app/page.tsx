@@ -100,7 +100,7 @@ const TRANSLATIONS = {
     metaDate: "Tanggal",
     metaDateVal: "",
     metaTime: "Waktu Sesi",
-    metaInstructor: "Guru Pengajar",
+    metaInstructor: "Pelatih",
     metaLevel: "Level",
     spotsLeft: "Sisa Slot Tersedia",
     spotsFull: "Kuota Penuh",
@@ -119,11 +119,9 @@ const TRANSLATIONS = {
     footerTerms: "Syarat Ketentuan",
     footerPrivacy: "Kebijakan Privasi",
     modalTitle: "Daftar Sesi",
-    modalTitleSuccess: "",
     modalSubtitle: "Silakan isi data lengkap untuk reservasi.",
     modalSubtitleSuccess: "E-Tiket akan segera diproses oleh sistem.",
     formLabelName: "Nama Lengkap *",
-    formPlaceholderName: "",
     formLabelEmail: "Alamat Email *",
     formLabelPhone: "Nomor WhatsApp*",
     formLabelNotes: "Catatan Medis (Opsional)",
@@ -234,11 +232,9 @@ const TRANSLATIONS = {
     footerTerms: "Terms & Conditions",
     footerPrivacy: "Privacy Policy",
     modalTitle: "Book Session",
-    modalTitleSuccess: "",
     modalSubtitle: "Please fill in the details for reservation.",
     modalSubtitleSuccess: "E-Ticket will be processed by the system immediately.",
     formLabelName: "Your Full Name *",
-    formPlaceholderName: "",
     formLabelEmail: "Email Address *",
     formLabelPhone: "WhatsApp Number *",
     formLabelNotes: "Medical Notes / Special Requests (Optional)",
@@ -319,6 +315,18 @@ export default function Home() {
   // Local state representing bookings database
   const [bookings, setBookings] = useState<any[]>([
     {
+      code: "000-0000-000",
+      name: "Dev Test",
+      email: "dev@serenesoul.id",
+      phone: "+62 800-0000-000",
+      eventName: "Morning Yoga Class with Coach Nita Rosalina",
+      date: "22 Juni 2026",
+      time: "08:00 - 09:30 WIB",
+      instructor: "Nita Rosalina",
+      price: "Rp 75.000",
+      status: "PENDING"
+    },
+    {
       code: "SRN-7777-SND",
       name: "Savitri Devi",
       email: "savitri.devi@gmail.com",
@@ -387,6 +395,10 @@ export default function Home() {
       }, 6000);
 
       const timer3 = setTimeout(() => {
+        setLookupStep(4);
+      }, 9000);
+
+      const timer4 = setTimeout(() => {
         setBookings((prev) =>
           prev.map((b) =>
             b.code.trim().toLowerCase() === searchResult.code.trim().toLowerCase()
@@ -397,15 +409,32 @@ export default function Home() {
         setSearchResult((prev: any) =>
           prev && prev !== "NOT_FOUND" ? { ...prev, status: "CONFIRMED" } : prev
         );
-      }, 7500);
+      }, 10500);
 
       return () => {
         clearTimeout(timer1);
         clearTimeout(timer2);
         clearTimeout(timer3);
+        clearTimeout(timer4);
       };
     }
   }, [searchResult]);
+
+  // Disable body scrolling on desktop and mobile when any modal overlay is active
+  useEffect(() => {
+    const isAnyModalOpen = isModalOpen || isLookupOpen || !!fullQrUrl;
+    if (isAnyModalOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.height = "100vh";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.body.style.height = "";
+    };
+  }, [isModalOpen, isLookupOpen, fullQrUrl]);
 
   const handleOpenModal = () => {
     if (FEATURED_EVENT.spotsLeft <= 0) return;
@@ -471,10 +500,26 @@ export default function Home() {
     if (!lookupCode) return;
 
     const sanitizeCode = (code: string) => code.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+    
+    // Automatically reset developer test booking back to PENDING to trigger the 3-step timeline
+    if (sanitizeCode(lookupCode) === "0000000000") {
+      setBookings((prev) =>
+        prev.map((b) =>
+          sanitizeCode(b.code) === "0000000000" ? { ...b, status: "PENDING" } : b
+        )
+      );
+    }
+
     const found = bookings.find(
       (b) => sanitizeCode(b.code) === sanitizeCode(lookupCode)
     );
-    setSearchResult(found || "NOT_FOUND");
+    
+    // Pass a fresh pending copy immediately if it's the dev code
+    if (found && sanitizeCode(found.code) === "0000000000") {
+      setSearchResult({ ...found, status: "PENDING" });
+    } else {
+      setSearchResult(found || "NOT_FOUND");
+    }
   };
 
   const handleBookingSubmit = (e: React.FormEvent) => {
@@ -886,7 +931,7 @@ export default function Home() {
           <div className={styles.modalContent}>
             <div className={styles.modalHeader}>
               <h3 className={styles.modalTitle}>
-                {bookingSuccess ? t.modalTitleSuccess : t.modalTitle}
+                {t.modalTitle}
               </h3>
               <p className={styles.modalSubtitle}>
                 {bookingSuccess
@@ -929,7 +974,7 @@ export default function Home() {
                       id="fullName"
                       type="text"
                       required
-                      placeholder={t.formPlaceholderName}
+                      placeholder=""
                       className={styles.formInput}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
@@ -1184,9 +1229,25 @@ export default function Home() {
                         {lang === "id" ? "Status Booking" : "Booking Status"}
                       </div>
                       <div className={styles.timelineSteps}>
+                        {/* Step 1: Verifikasi Data Pemesan */}
                         <div className={`${styles.timelineStep} ${lookupStep >= 1 ? styles.stepActive : ""} ${lookupStep > 1 ? styles.stepCompleted : ""}`}>
                           <div className={styles.stepIndicator}>
                             {lookupStep > 1 ? <FontAwesomeIcon icon={faCheck} /> : "1"}
+                          </div>
+                          <div className={styles.stepInfo}>
+                            <div className={styles.stepName}>
+                              {lang === "id" ? "Proses Validasi" : "Validation Process"}
+                            </div>
+                            <div className={styles.stepDesc}>
+                              {lang === "id" ? "Memeriksa detail booking oleh sistem" : "Checking booking details by system"}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Step 2: Menunggu Verifikasi */}
+                        <div className={`${styles.timelineStep} ${lookupStep >= 2 ? styles.stepActive : ""} ${lookupStep > 2 ? styles.stepCompleted : ""}`}>
+                          <div className={styles.stepIndicator}>
+                            {lookupStep > 2 ? <FontAwesomeIcon icon={faCheck} /> : "2"}
                           </div>
                           <div className={styles.stepInfo}>
                             <div className={styles.stepName}>
@@ -1198,9 +1259,10 @@ export default function Home() {
                           </div>
                         </div>
 
-                        <div className={`${styles.timelineStep} ${lookupStep >= 2 ? styles.stepActive : ""} ${lookupStep > 2 ? styles.stepCompleted : ""}`}>
+                        {/* Step 3: Proses Pembuatan Tiket */}
+                        <div className={`${styles.timelineStep} ${lookupStep >= 3 ? styles.stepActive : ""} ${lookupStep > 3 ? styles.stepCompleted : ""}`}>
                           <div className={styles.stepIndicator}>
-                            {lookupStep > 2 ? <FontAwesomeIcon icon={faCheck} /> : "2"}
+                            {lookupStep > 3 ? <FontAwesomeIcon icon={faCheck} /> : "3"}
                           </div>
                           <div className={styles.stepInfo}>
                             <div className={styles.stepName}>
@@ -1208,20 +1270,6 @@ export default function Home() {
                             </div>
                             <div className={styles.stepDesc}>
                               {lang === "id" ? "Mengalokasikan kuota dan menerbitkan e-tiket" : "Allocating quota and generating e-ticket"}
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className={`${styles.timelineStep} ${lookupStep >= 3 ? styles.stepActive : ""}`}>
-                          <div className={styles.stepIndicator}>
-                            {lookupStep >= 3 ? <FontAwesomeIcon icon={faCheck} /> : "3"}
-                          </div>
-                          <div className={styles.stepInfo}>
-                            <div className={styles.stepName}>
-                              {lang === "id" ? "Berhasil" : "Success"}
-                            </div>
-                            <div className={styles.stepDesc}>
-                              {lang === "id" ? "Pembayaran terverifikasi dan tiket aktif" : "Payment verified and ticket activated"}
                             </div>
                           </div>
                         </div>
@@ -1329,7 +1377,7 @@ export default function Home() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={fullQrUrl} alt="QR Code Large" className={styles.largeQrImg} />
             <p className={styles.fullQrSubtitle}>
-              {lang === "id" ? "Pindai saat memasuki studio" : "Scan when entering the studio"}
+              {searchResult ? searchResult.code : ""}
             </p>
           </div>
         </div>
